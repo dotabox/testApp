@@ -10,7 +10,7 @@
             function onDeviceReady() { 
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
-					   // .load("audio","slap","audio/slap");
+					   .load("audio","slap","audio/slap");
 				preload.onloadAll= function(){
 					windowLoad(preload);  
 				}
@@ -43,7 +43,7 @@
 			        var sprite = new BKGM.Sprite({image:Game.resource.images["chim"],rows:2,columns:2}).addAnimation("run",[0,1],200,"loop").playAnimation("run");
 					var testactor=new BKGM.Actor().addSprite(sprite);
 					testactor.mouseDown=function(e){
-						console.log("fuck");
+						Game.resource.audios["slap"].forceplay();
 					}
 					Game.addChild(testactor);
 					var mb = new BKGM.Behavior(50, 50, 10, testactor);
