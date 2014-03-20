@@ -39,7 +39,7 @@
 			        var Game = this;
 			        BKGM.debug=1;
 			        Game.addRes(preload);
-			        if(_isCordova) {
+			        if(BKGM._isCordova) {
 			        	// var ads = new BKGM.Ads('2d91dfacf3ad4345973282a6a64a7b9e')
 			        }
 			        var sprite = new BKGM.Sprite({image:Game.resource.images["chim"],rows:2,columns:2}).addAnimation("run",[0,1],200,"loop").playAnimation("run");

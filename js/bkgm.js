@@ -393,8 +393,8 @@ var BKGM = BKGM||{};
 
         setAudio : function( name ,callback) {
             var self=this;
-            ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("_isCordova"+_isCordova) : alert("cordova day :v")
-            if(_isCordova){
+            ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("BKGM._isCordova"+BKGM._isCordova) : alert("cordova day :v")
+            if(BKGM._isCordova){
                 alert("load audio")
                 this.audio = new Media(name+'.ogg', function() { 
                    self._onload();
@@ -460,7 +460,7 @@ var BKGM = BKGM||{};
             return this;
         },
         stop : function(){
-            if(_isCordova) {
+            if(BKGM._isCordova) {
                 this.audio.stop();
             } else {                
                 this.audio.currentTime=0;
