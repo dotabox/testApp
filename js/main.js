@@ -10,7 +10,7 @@
             function onDeviceReady() { 
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
-					   .load("audio","slap","audio/slap");
+					   // .load("audio","slap","audio/slap");
 				preload.onloadAll= function(){
 					windowLoad(preload);  
 				}
@@ -38,7 +38,7 @@
 			        BKGM.debug=1;
 			        Game.addRes(preload);
 			        if(_isCordova) {
-			        	var ads = new BKGM.Ads('2d91dfacf3ad4345973282a6a64a7b9e')
+			        	// var ads = new BKGM.Ads('2d91dfacf3ad4345973282a6a64a7b9e')
 			        }
 			        var sprite = new BKGM.Sprite({image:Game.resource.images["chim"],rows:2,columns:2}).addAnimation("run",[0,1],200,"loop").playAnimation("run");
 					var testactor=new BKGM.Actor().addSprite(sprite);
