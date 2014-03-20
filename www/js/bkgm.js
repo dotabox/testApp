@@ -404,17 +404,12 @@ var BKGM = BKGM||{};
                 
                 // this.src=getPhoneGapPath()+name+'.mp3';
                 // alert(getPhoneGapPath());
-                // var src = getPhoneGapPath() + "" + name;
-                var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
+                this.src = getPhoneGapPath() + "" + name;
+                // var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
                 // alert(name)
-                alert(src)
+                if (callback && !self.call) {callback();self.call=1;}
                 // var src='/android_asset/www/audio/gameover.ogg';
-                 this.audio = new Media(src, function(){
-                   self._onload();
-                   alert("loads ok")
-                   
-                 }, function(error){alert('error'+error)});
-                 if (callback && !self.call) {callback();self.call=1;}
+                 
                 //alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
@@ -467,10 +462,14 @@ var BKGM = BKGM||{};
         forceplay:function(){
            
             if(BKGM._isCordova){
-                // var src=this.src;
+                var src=this.src;
                 // var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
 
                 // Create Media object from src
+                this.audio = new Media(src, function(){
+                   self._onload();
+                   
+                 }, function(error){alert('error'+error)});
                
                 this.stop();
                 // Play audio
