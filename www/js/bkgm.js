@@ -404,8 +404,9 @@ var BKGM = BKGM||{};
             if(BKGM._isCordova){
                 
                 // this.src=getPhoneGapPath()+name+'.mp3';
-                this.src='/android_asset/www/audio/slap.mp3'
-                alert(this.src)
+                var src='/android_asset/www/audio/gameover.ogg';
+                 this.audio = new Media(src, function(){alert("load ok")}, function(){alert("load error")});
+                //alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
                 //    alert("loadok")
@@ -458,11 +459,11 @@ var BKGM = BKGM||{};
         forceplay:function(){
            
             if(BKGM._isCordova){
-                var src=this.src;
+                // var src=this.src;
                 // var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
 
                 // Create Media object from src
-                this.audio = new Media(src, function(){alert("load ok")}, function(){alert("load error")});
+               
 
                 // Play audio
                 this.audio.play();
