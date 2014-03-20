@@ -393,7 +393,6 @@ var _isCordova;
 
         setAudio : function( name ,callback) {
             var self=this;
-            setAudio
             if(_isCordova){
                 alert("load audio")
                 this.audio = new Media(name+'.ogg', function() { 
