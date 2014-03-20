@@ -404,7 +404,8 @@ var BKGM = BKGM||{};
                 
                 // this.src=getPhoneGapPath()+name+'.mp3';
                 // alert(getPhoneGapPath());
-                var src = getPhoneGapPath() + "" + name;
+                // var src = getPhoneGapPath() + "" + name;
+                var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
                 // alert(name)
                 alert(src)
                 // var src='/android_asset/www/audio/gameover.ogg';
