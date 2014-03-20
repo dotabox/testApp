@@ -397,7 +397,7 @@ var BKGM = BKGM||{};
             if(BKGM._isCordova){
                 alert(Media)
 
-                this.audio = new Media(name+'.ogg', function() { 
+                this.audio = new Media(name+'.mp3', function() { 
                    self._onload();
                    alert("loadok")
                    if (callback) callback();
