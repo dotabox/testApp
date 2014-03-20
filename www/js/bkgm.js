@@ -384,6 +384,13 @@ var BKGM = BKGM||{};
 (function(){
     // var BKGM = BKGM||{};
     // var s1 = new BKGM.Audio().setAudio('1');
+    function getPhoneGapPath() {
+
+        var path = window.location.pathname;
+        path = path.substr( path, path.length - 10 );
+        return 'file://' + path;
+
+    };
     BKGM.Audio = function(){
         return this;
     }
@@ -395,8 +402,9 @@ var BKGM = BKGM||{};
             var self=this;
             ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("BKGM._isCordova"+BKGM._isCordova) : alert("cordova day :v")
             if(BKGM._isCordova){
-                alert(Media)
-                this.src=name+'.mp3'
+                
+                this.src=getPhoneGapPath()+name+'.mp3'
+                alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
                 //    alert("loadok")
