@@ -469,9 +469,7 @@ var BKGM = BKGM||{};
                 this.audio = new Media(src, function(){
                    self._onload();
                    
-                 }, function(error){alert('error'+error)});
-               
-                this.stop();
+                 }, function(error){});
                 // Play audio
                 this.audio.play();
 
