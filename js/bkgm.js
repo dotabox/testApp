@@ -393,7 +393,7 @@ var _isCordova;
         setAudio : function( name ,callback) {
             var self=this;
             if(_isCordova){
-                this.audio = new Media(name+'.ogg', function() { 
+                this.audio = new Media(name+'.ogg'), function() { 
                    self._onload();
                    if (callback) callback();
                 },
