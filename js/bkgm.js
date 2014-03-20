@@ -542,8 +542,9 @@ var _isCordova;
                 }
             } else
             if(type==="audio"){
-                alert("fuck audio")
+                
                 var audio=new BKGM.Audio();
+                alert("fuck audio")
                 audio.setAudio(url,function(){self._onload()});
                 self.audios[name]=audio;
                 if (callback) callback();
@@ -560,20 +561,6 @@ var _isCordova;
     BKGM.preload.prototype.onloadAll=function(){
         return this;
     }
-    BKGM.loadImages = function(arr,callback){
-        var self=this;
-        var loaded=0;
-        for (var i = arr.length - 1; i >= 0; i--) {
-            var image=new Image();
-            image.src=arr[i];
-            image.onload=function(){
-                loaded++;
-                if (loaded==arr.length)
-                    if (callback) callback();
-                    else if(self.onloadImagesAll) self.onloadImagesAll();
-            }
-        };
-    };
 })();
 (function(){
     BKGM.Sprite = function(obj){
