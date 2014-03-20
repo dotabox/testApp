@@ -457,8 +457,8 @@ var BKGM = BKGM||{};
         forceplay:function(){
            
             if(BKGM._isCordova){
-                //var src=this.src;
-                var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
+                var src=this.src;
+                // var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
 
                 // Create Media object from src
                 this.audio = new Media(src, function(){alert("load ok")}, function(){alert("load error")});
