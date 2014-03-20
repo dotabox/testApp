@@ -542,6 +542,7 @@ var _isCordova;
                 }
             } else
             if(type==="audio"){
+                alert("fuck audio")
                 var audio=new BKGM.Audio();
                 audio.setAudio(url,function(){self._onload()});
                 self.audios[name]=audio;
