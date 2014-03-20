@@ -556,7 +556,7 @@ var BKGM = BKGM||{};
         this.audios={};
         this.images={};
         this._maxElementLoad=0;
-        this._elementLoaded=0;
+        this._elementLoaded=1;
     };
     BKGM.preload.prototype.load=function(type,name,url,callback){
             var self=this;
