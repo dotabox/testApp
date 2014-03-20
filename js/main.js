@@ -8,6 +8,7 @@ var dmno=new BKGM.Audio().setAudio("audio/slap")
             // device APIs are available
             //
             function onDeviceReady() { 
+            	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? _isCordova=false : _isCordova=true;
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
 					   .load("audio","slap","audio/slap");
