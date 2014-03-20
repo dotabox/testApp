@@ -403,7 +403,7 @@ var BKGM = BKGM||{};
             ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("BKGM._isCordova"+BKGM._isCordova) : alert("cordova day :v")
             if(BKGM._isCordova){
                 
-                this.src=getPhoneGapPath()+name+'.mp3'
+                this.src=getPhoneGapPath()+name+'.mp3';
                 alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
@@ -457,7 +457,8 @@ var BKGM = BKGM||{};
         forceplay:function(){
            
             if(BKGM._isCordova){
-                var src=this.src;
+                //var src=this.src;
+                var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
 
                 // Create Media object from src
                 this.audio = new Media(src, function(){alert("load ok")}, function(){alert("load error")});
