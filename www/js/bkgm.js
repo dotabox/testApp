@@ -403,7 +403,7 @@ var BKGM = BKGM||{};
             ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("BKGM._isCordova"+BKGM._isCordova) : alert("cordova day :v")
             if(BKGM._isCordova){
                 
-                this.src=getPhoneGapPath()+name+'.mp3';
+                this.src=getPhoneGapPath()/+name+'.mp3';
                 alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
