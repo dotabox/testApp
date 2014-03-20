@@ -12,6 +12,7 @@ window.requestAnimFrame = (function(){
 
 var BKGM = BKGM||{};
 var _isCordova;
+((typeof cordova == 'undefined') && (typeof Cordova == 'undefined')) ? _isCordova=false : _isCordova=true;
 (function(){
     var lastTime=0;
     var t = 0;
@@ -61,7 +62,7 @@ var _isCordova;
         var _this=this;
         _this.gravity={x:0,y:0,z:0};
         
-        ((typeof cordova == 'undefined') && (typeof Cordova == 'undefined')) ? _isCordova=false : _isCordova=true;
+        
         if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
             window.addEventListener('devicemotion', function(eventData){
                         if(eventData.accelerationIncludingGravity)
@@ -392,6 +393,7 @@ var _isCordova;
 
         setAudio : function( name ,callback) {
             var self=this;
+            setAudio
             if(_isCordova){
                 alert("load audio")
                 this.audio = new Media(name+'.ogg', function() { 
