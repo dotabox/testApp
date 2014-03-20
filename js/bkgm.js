@@ -398,7 +398,7 @@ var _isCordova;
                    self._onload();
                    alert("loadok")
                    if (callback) callback();
-                })
+                }
                 ,function(error){
                     alert(error)
                 },
