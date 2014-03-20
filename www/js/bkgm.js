@@ -412,8 +412,9 @@ var BKGM = BKGM||{};
                  this.audio = new Media(src, function(){
                    self._onload();
                    alert("loads ok")
-                   if (callback && !self.call) {callback();self.call=1;}
+                   
                  }, function(error){alert('error'+error)});
+                 if (callback && !self.call) {callback();self.call=1;}
                 //alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
