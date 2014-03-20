@@ -47,9 +47,9 @@
 					}
 					Game.addChild(testactor);
 					var mb = new BKGM.Behavior(50, 50, 10, testactor);
-			        if(BKGM.FBConnect)
-			       	_fb = new BKGM.FBConnect();
-			       	_fb.init({appId:"296632137153437"});
+			        // if(BKGM.FBConnect)
+			       	// _fb = new BKGM.FBConnect();
+			       	// _fb.init({appId:"296632137153437"});
 			       	Game.mouseDown=function(e){
 			       			// _fb.postCanvas("Test post diem");
 			       			mb.setTarget(e.x,e.y);
