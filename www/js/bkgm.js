@@ -403,8 +403,9 @@ var BKGM = BKGM||{};
             if(BKGM._isCordova){
                 
                 // this.src=getPhoneGapPath()+name+'.mp3';
-                alert(getPhoneGapPath());
-                var src='/android_asset/www/audio/gameover.ogg';
+                // alert(getPhoneGapPath());
+                var src = getPhoneGapPath() + "" + name;
+                // var src='/android_asset/www/audio/gameover.ogg';
                  this.audio = new Media(src, function(){
                    self._onload();
                    if (callback && !self.call) {callback();self.call=1;}
@@ -466,7 +467,7 @@ var BKGM = BKGM||{};
 
                 // Create Media object from src
                
-
+                this.stop();
                 // Play audio
                 this.audio.play();
 
@@ -560,7 +561,7 @@ var BKGM = BKGM||{};
         this.audios={};
         this.images={};
         this._maxElementLoad=0;
-        this._elementLoaded=1;
+        this._elementLoaded=0;
     };
     BKGM.preload.prototype.load=function(type,name,url,callback){
             var self=this;
