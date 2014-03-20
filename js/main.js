@@ -8,6 +8,7 @@
             // device APIs are available
             //
             function onDeviceReady() { 
+            	alert("deviceready")
             	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
             	
             	var preload= new BKGM.preload();           	
