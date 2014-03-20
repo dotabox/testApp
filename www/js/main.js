@@ -13,7 +13,7 @@
             	
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
-					   .load("audio","slap","/slap");
+					   .load("audio","slap","/audio/slap");
 				preload.onloadAll= function(){
 					windowLoad(preload);  
 				}
