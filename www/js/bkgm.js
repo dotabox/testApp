@@ -466,11 +466,12 @@ var BKGM = BKGM||{};
                 // var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
 
                 // Create Media object from src
-                this.audio = new Media(src, function(){
+                if(!this.audio)this.audio = new Media(src, function(){
                    self._onload();
                    
                  }, function(error){});
                 // Play audio
+                this.stop();
                 this.audio.play();
 
                 
