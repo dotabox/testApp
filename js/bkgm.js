@@ -395,7 +395,8 @@ var BKGM = BKGM||{};
             var self=this;
             ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("BKGM._isCordova"+BKGM._isCordova) : alert("cordova day :v")
             if(BKGM._isCordova){
-                alert("load audio")
+                alert(Media)
+
                 this.audio = new Media(name+'.ogg', function() { 
                    self._onload();
                    alert("loadok")
@@ -437,7 +438,7 @@ var BKGM = BKGM||{};
                    if (callback && !self.call) {callback();self.call=1;}
                 }, false);
             }
-            
+            alert("da"+this.audio)
             return this;
         },
 
