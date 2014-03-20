@@ -388,7 +388,7 @@ var BKGM = BKGM||{};
 
         var path = window.location.pathname;
         path = path.substr( path, path.length - 10 );
-        return 'file://' + path;
+        return path;
 
     };
     BKGM.Audio = function(){
