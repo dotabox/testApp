@@ -404,10 +404,10 @@ var BKGM = BKGM||{};
                 
                 // this.src=getPhoneGapPath()+name+'.mp3';
                 // alert(getPhoneGapPath());
-                var src = getPhoneGapPath() + "" + name;
-                alert(name)
-                alert(src)
-                // var src='/android_asset/www/audio/gameover.ogg';
+                // var src = getPhoneGapPath() + "" + name;
+                // alert(name)
+                // alert(src)
+                var src='/android_asset/www/audio/gameover.ogg';
                  this.audio = new Media(src, function(){
                    self._onload();
                    if (callback && !self.call) {callback();self.call=1;}
