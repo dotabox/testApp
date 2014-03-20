@@ -412,7 +412,7 @@ var BKGM = BKGM||{};
                    self._onload();
                    alert("loads ok")
                    if (callback && !self.call) {callback();self.call=1;}
-                 }, function(){});
+                 }, function(error){alert('error'+error)});
                 //alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
