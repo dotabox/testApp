@@ -11,9 +11,9 @@ window.requestAnimFrame = (function(){
 
 
 var BKGM = BKGM||{};
-var _isCordova;
 
 (function(){
+    ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
     var lastTime=0;
     var t = 0;
     var sceneTime = 0;

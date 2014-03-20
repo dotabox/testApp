@@ -2,13 +2,14 @@
 var dmno=new BKGM.Audio().setAudio("audio/slap")
 	// Wait for device API libraries to load
             //
-            document.addEventListener("deviceready", onDeviceReady, false);
-            window.addEventListener("load", onDeviceReady, false);
+            document.addEventListener("deviceready", _onDeviceReady, false);
+            //window.addEventListener("load", onDeviceReady, false);
 
             // device APIs are available
             //
             function onDeviceReady() { 
-            	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? _isCordova=false : _isCordova=true;
+            	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
+            	
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
 					   .load("audio","slap","audio/slap");
