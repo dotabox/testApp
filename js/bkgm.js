@@ -326,7 +326,7 @@ var _isCordova;
                  _this.currentTouch.state="START";
                 for (var j = _this.childrentList.length - 1; j >= 0; j--) {
                     if(_this.childrentList[j]._eventenable &&checkEventActor( e,_this.childrentList[j])) {
-                        _this.childrentList[j].touchStart(e)
+                        if(_this.childrentList[j].touchStart) _this.childrentList[j].touchStart(e)
                         return;
                     }
                 };
@@ -413,7 +413,7 @@ var _isCordova;
                 });
             }else {
                 this.audio= new Audio();
-                
+                this.audio.preload = 'auto';
                 var source = document.createElement('source');
                 if (this.audio.canPlayType("audio/ogg; codecs=vorbis")) {
                     source.type= 'audio/ogg';
@@ -425,16 +425,14 @@ var _isCordova;
                 this.audio.appendChild(source);
 
                 this.audio.load();
-                this.audio.preload = 'auto';
+                
                 this.audio.addEventListener('ended', function() { 
-                        if(self.ended) self.ended()
-                        if(self._loop) {
-                            self.play();
-                        }
+                        // this.currentTime=0;
+                        if(self.ended) self.ended();
                     }, false);
                 this.audio.addEventListener('canplaythrough', function() { 
                    self._onload();
-                   if (callback) callback();
+                   if (callback && !self.call) {callback();self.call=1;}
                 }, false);
             }
             
@@ -447,7 +445,7 @@ var _isCordova;
         },
         forceplay:function(){
             this.stop();
-            this.audio.play();
+            this.play();
             return this;
         },
         play : function() {
@@ -462,7 +460,7 @@ var _isCordova;
         stop : function(){
             if(_isCordova) {
                 this.audio.stop();
-            } else {
+            } else {                
                 this.audio.currentTime=0;
                 this.audio.pause();
             }            

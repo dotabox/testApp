@@ -1,5 +1,5 @@
 (function(){
-
+var dmno=new BKGM.Audio().setAudio("audio/slap")
 	// Wait for device API libraries to load
             //
             document.addEventListener("deviceready", onDeviceReady, false);
@@ -42,8 +42,10 @@
 			        }
 			        var sprite = new BKGM.Sprite({image:Game.resource.images["chim"],rows:2,columns:2}).addAnimation("run",[0,1],200,"loop").playAnimation("run");
 					var testactor=new BKGM.Actor().addSprite(sprite);
-					testactor.mouseDown=function(e){
-						Game.resource.audios["slap"].forceplay();
+					testactor.touchStart=function(e){
+						var s0=Game.resource.audios["slap"];
+						s0.forceplay();
+						// dmno.play()
 					}
 					Game.addChild(testactor);
 					var mb = new BKGM.Behavior(50, 50, 10, testactor);
