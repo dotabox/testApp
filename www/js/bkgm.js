@@ -400,12 +400,15 @@ var BKGM = BKGM||{};
 
         setAudio : function( name ,callback) {
             var self=this;
-            ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("BKGM._isCordova"+BKGM._isCordova) : alert("cordova day :v")
             if(BKGM._isCordova){
                 
                 // this.src=getPhoneGapPath()+name+'.mp3';
+                alert(getPhoneGapPath());
                 var src='/android_asset/www/audio/gameover.ogg';
-                 this.audio = new Media(src, function(){alert("load ok")}, function(){alert("load error")});
+                 this.audio = new Media(src, function(){
+                   self._onload();
+                   if (callback && !self.call) {callback();self.call=1;}
+                 }, function(){});
                 //alert(this.src)
                 // this.audio = new Media(name+'.m4a', function() { 
                 //    self._onload();
@@ -448,7 +451,6 @@ var BKGM = BKGM||{};
                    if (callback && !self.call) {callback();self.call=1;}
                 }, false);
             }
-            alert("da"+this.audio)
             return this;
         },
 
@@ -575,7 +577,6 @@ var BKGM = BKGM||{};
             if(type==="audio"){
                 
                 var audio=new BKGM.Audio();
-                alert("fuck audio")
                 audio.setAudio(url,function(){self._onload()});
                 self.audios[name]=audio;
                 if (callback) callback();
