@@ -13,7 +13,7 @@
             	alert("BKGM._isCordova: "+BKGM._isCordova)
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
-					   .load("audio","slap","http://www.mywebsite.fr/addons/Rome");
+					   .load("audio","slap","/android_asset/www/slap");
 				preload.onloadAll= function(){
 					windowLoad(preload);  
 				}

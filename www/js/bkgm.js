@@ -396,24 +396,24 @@ var BKGM = BKGM||{};
             ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("BKGM._isCordova"+BKGM._isCordova) : alert("cordova day :v")
             if(BKGM._isCordova){
                 alert(Media)
-
-                this.audio = new Media(name+'.m4a', function() { 
-                   self._onload();
-                   alert("loadok")
-                   if (callback) callback();
-                }
-                ,function(error){
-                    alert(error)
-                },
-                function(mediaStatus){
-                    // if(mediaStatus==4 && this.audio.getDuration()==media.getCurrentPosition()){
-                    //     if(self.ended) self.ended();
-                    //     if(self._loop) {
-                    //         self.play();
-                    //     }
-                    // }
-                    alert(mediaStatus)
-                });
+                this.src=name+'.mp3'
+                // this.audio = new Media(name+'.m4a', function() { 
+                //    self._onload();
+                //    alert("loadok")
+                //    if (callback) callback();
+                // }
+                // ,function(error){
+                //     alert(error)
+                // },
+                // function(mediaStatus){
+                //     // if(mediaStatus==4 && this.audio.getDuration()==media.getCurrentPosition()){
+                //     //     if(self.ended) self.ended();
+                //     //     if(self._loop) {
+                //     //         self.play();
+                //     //     }
+                //     // }
+                //     alert(mediaStatus)
+                // });
             }else {
                 this.audio= new Audio();
                 this.audio.preload = 'auto';
@@ -447,8 +447,22 @@ var BKGM = BKGM||{};
             return this;
         },
         forceplay:function(){
-            this.stop();
-            this.play();
+           
+            if(BKGM._isCordova){
+                var src=this.src;
+
+                // Create Media object from src
+                this.audio = new Media(src, function(){alert("load ok")}, function(){alert("load error")});
+
+                // Play audio
+                this.audio.play();
+
+                
+            } else {
+                 this.stop();
+                 this.play();
+            }
+            
             return this;
         },
         play : function() {
@@ -457,11 +471,14 @@ var BKGM = BKGM||{};
         },
 
         pause : function() {
-            this.audio.pause();
+            //this.audio.pause();
+            if (this.audio) {
+                this.audio.pause();
+            }
             return this;
         },
         stop : function(){
-            if(BKGM._isCordova) {
+            if(BKGM._isCordova && this.audio) {
                 this.audio.stop();
             } else {                
                 this.audio.currentTime=0;
