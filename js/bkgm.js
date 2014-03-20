@@ -395,17 +395,21 @@ var _isCordova;
             if(_isCordova){
                 this.audio = new Media(name+'.ogg', function() { 
                    self._onload();
+                   alert("loadok")
                    if (callback) callback();
                 })
-                // ,function(){},
-                // function(mediaStatus){
-                //     if(mediaStatus==4 && this.audio.getDuration()==media.getCurrentPosition()){
-                //         if(self.ended) self.ended();
-                //         if(self._loop) {
-                //             self.play();
-                //         }
-                //     }
-                // });
+                ,function(error){
+                    alert(error)
+                },
+                function(mediaStatus){
+                    // if(mediaStatus==4 && this.audio.getDuration()==media.getCurrentPosition()){
+                    //     if(self.ended) self.ended();
+                    //     if(self._loop) {
+                    //         self.play();
+                    //     }
+                    // }
+                    alert(mediaStatus)
+                });
             }else {
                 this.audio= new Audio();
                 
