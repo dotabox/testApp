@@ -2,7 +2,7 @@
 var dmno=new BKGM.Audio().setAudio("audio/slap")
 	// Wait for device API libraries to load
             //
-            document.addEventListener("deviceready", _onDeviceReady, false);
+            document.addEventListener("deviceready", onDeviceReady, false);
             //window.addEventListener("load", onDeviceReady, false);
 
             // device APIs are available
