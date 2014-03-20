@@ -393,7 +393,7 @@ var _isCordova;
 
         setAudio : function( name ,callback) {
             var self=this;
-            alert("_isCordova"+_isCordova)
+            ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? alert("_isCordova"+_isCordova) : alert("cordova day :v")
             if(_isCordova){
                 alert("load audio")
                 this.audio = new Media(name+'.ogg', function() { 
