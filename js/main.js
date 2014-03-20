@@ -8,9 +8,9 @@
             // device APIs are available
             //
             function onDeviceReady() { 
-            	alert("deviceready")
+
             	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
-            	
+            	alert("BKGM._isCordova: "+BKGM._isCordova)
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
 					   .load("audio","slap","audio/slap");
