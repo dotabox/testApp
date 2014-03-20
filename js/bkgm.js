@@ -393,19 +393,19 @@ var _isCordova;
         setAudio : function( name ,callback) {
             var self=this;
             if(_isCordova){
-                this.audio = new Media(name+'.ogg'), function() { 
+                this.audio = new Media(name+'.ogg', function() { 
                    self._onload();
                    if (callback) callback();
-                },
-                function(){},
-                function(mediaStatus){
-                    if(mediaStatus==4 && this.audio.getDuration()==media.getCurrentPosition()){
-                        if(self.ended) self.ended();
-                        if(self._loop) {
-                            self.play();
-                        }
-                    }
-                });
+                })
+                // ,function(){},
+                // function(mediaStatus){
+                //     if(mediaStatus==4 && this.audio.getDuration()==media.getCurrentPosition()){
+                //         if(self.ended) self.ended();
+                //         if(self._loop) {
+                //             self.play();
+                //         }
+                //     }
+                // });
             }else {
                 this.audio= new Audio();
                 
