@@ -2,27 +2,29 @@
 // var dmno=new BKGM.Audio().setAudio("audio/slap")
 	// Wait for device API libraries to load
             //
-            document.addEventListener("deviceready", onDeviceReady, false);
-            //window.addEventListener("load", onDeviceReady, false);
+            
+            window.addEventListener("load", bodyload, false);
 
             // device APIs are available
             //
+            function bodyload(){
+            	onDeviceReady()
+            	// document.addEventListener("deviceready", onDeviceReady, false);
+
+            }
             function onDeviceReady() { 
 
             	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
             	
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
-					   .load("audio","slap","/audio/slap.mp3");
+					   .load("audio","slap","audio/slap.mp3");
 				preload.onloadAll= function(){
 					windowLoad(preload);  
 				}
             }
 	// window.onload=function(){
         function windowLoad(preload) {
-   //      	if (navigator.isCocoonJS) {
-			//     CocoonJS.App.setAntialias(true);
-			// }
             var canvas = document.createElement('canvas');
             canvas.setAttribute("id", "game"); 
             canvas.width  = window.innerWidth;

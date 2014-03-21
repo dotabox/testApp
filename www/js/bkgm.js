@@ -401,10 +401,9 @@ var BKGM = BKGM||{};
         setAudio : function( name ,callback) {
             var self=this;
             if(BKGM._isCordova){
-                
                 // this.src=getPhoneGapPath()+name+'.mp3';
                 // alert(getPhoneGapPath());
-                this.src = getPhoneGapPath() + "" + name;
+                this.src = getPhoneGapPath() + "/" + name;
                 // var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
                 // alert(name)
                 if (callback && !self.call) {callback();self.call=1;}
@@ -429,17 +428,17 @@ var BKGM = BKGM||{};
                 //     alert(mediaStatus)
                 // });
             }else {
-                this.audio= new Audio();
+                this.audio= new Audio(name);
                 this.audio.preload = 'auto';
-                var source = document.createElement('source');
-                if (this.audio.canPlayType("audio/ogg; codecs=vorbis")) {
-                    source.type= 'audio/ogg';
-                    source.src= name+'.ogg';
-                } else {
-                    source.type= 'audio/mpeg';
-                    source.src= name+'.mp3';
-                }
-                this.audio.appendChild(source);
+                // var source = document.createElement('source');
+                // if (this.audio.canPlayType("audio/ogg; codecs=vorbis")) {
+                //     source.type= 'audio/ogg';
+                //     source.src= name+'.ogg';
+                // } else {
+                //     source.type= 'audio/mpeg';
+                //     source.src= name+'.mp3';
+                // }
+                // this.audio.appendChild(source);
 
                 this.audio.load();
                 

@@ -55,6 +55,7 @@
 	    <param name="APP_ID" value="296632137153437" />
 	    <param name="APP_NAME" value="White Drop" />
 	</gap:plugin>
+    <gap:plugin name="com.adobe.plugins.fastcanvas" />
     <!-- Define app icon for each platform. -->
   
 
