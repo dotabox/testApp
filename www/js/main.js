@@ -18,6 +18,14 @@
             	
             	var preload= new BKGM.preload();           	
 				preload.load("image","chim","img/chuotngu.png")
+					   .load("image","lol_blit","img/LOL/LOL_Blit.png")
+					   .load("image","lol_hand","img/LOL/LOL_2.png")
+					   .load("image","lol_main","img/LOL/LOL_1.png")
+					   .load("image","lol_3","img/LOL/LOL_3.png")
+					   .load("image","dota_pudge","img/DOTA/DOTA_Pudge.png")
+					   .load("image","dota_hand","img/DOTA/DOTA_2.png")
+					   .load("image","dota_main","img/DOTA/DOTA_1.png")
+					   .load("image","dota_3","img/DOTA/DOTA_3.png")
 					   .load("audio","slap","audio/slap.mp3");
 				preload.onloadAll= function(){
 					windowLoad(preload);  
@@ -27,8 +35,8 @@
         function windowLoad(preload) {
             var canvas = document.createElement('canvas');
             canvas.setAttribute("id", "game"); 
-            canvas.width  = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width  = 800;
+            canvas.height = 600;
             var ctx = canvas.getContext("2d");
             document.body.appendChild(canvas);
 
@@ -40,26 +48,15 @@
 			    setup: function(){
 			        director = new BKGM.States();
 			        var Game = this;
+			        Game.addStates(director);
 			        BKGM.debug=1;
 			        Game.addRes(preload);
-			        if(BKGM._isCordova) {
-			        	// var ads = new BKGM.Ads('2d91dfacf3ad4345973282a6a64a7b9e')
-			        }
-			        var sprite = new BKGM.Sprite({image:Game.resource.images["chim"],rows:2,columns:2}).addAnimation("run",[0,1],200,"loop").playAnimation("run");
-					var testactor=new BKGM.Actor().addSprite(sprite);
-					testactor.touchStart=function(e){
-						var s0=Game.resource.audios["slap"];
-						s0.forceplay();
-						// dmno.play()
-					}
-					Game.addChild(testactor);
-					var mb = new BKGM.Behavior(50, 50, 10, testactor);
-			        // if(BKGM.FBConnect)
+			        
 			       	// _fb = new BKGM.FBConnect();
 			       	// _fb.init({appId:"296632137153437"});
 			       	Game.touchStart=function(e){
 			       			// _fb.postCanvas("Test post diem");
-			       			mb.setTarget(e.x,e.y);
+			       			// mb.setTarget(e.x,e.y);
 			       			
 			       	}
 			       
@@ -72,99 +69,126 @@
 				    director.state("ready", [	
 				     	"background",
 				     	"setup",
+				     	"lolvsdota"
 				     	// "drop.tail",
 				     	// "drop.update",
 				     	// "drop.draw",
-				     	"testactor.update",
-				     	"testactor.draw"
+				     	// "testactor.update",
+				     	// "testactor.draw"
 				    ]);
 				    
 				    director.state("menu", [
 				    	"setup",
 				    	"background",
-				    	//"menu",
-				    	//"logo",
-				    	// "drop.tail",
-				    	// "drop.update",
-				    	// "blocks.update",
-				    	// "drop.draw",
-				    	// "blocks.draw",
-				    	"testactor.update",
-				    	"testactor.draw"
-				    //	"guide"
+				    	"lolvsdota"				    	
 				    ]);
-				        
+				    director.state("run", [
+				    	"background",
+				    	"charactor.update",
+				    	"charactor.draw",
+				    	"heroes",
+				    	"testactor"
+				    ]);
+
+				    var menudota={
+				    	x:150,
+				    	y:100,
+				    	w:200,
+				    	h:450
+				    }
+				    var menulol={
+				    	x:500,
+				    	y:100,
+				    	w:200,
+				    	h:450
+				    }
+				    director.task("lolvsdota", function(){
+				        // Game.drop.updateTail()
+				        Game.fill(255,255,255,1);
+				        Game.rect(menudota.x,menudota.y,menudota.w,menudota.h);
+				        Game.rect(menulol.x,menulol.y,menulol.w,menulol.h);
+				    },true);
+				    var charactor;
+				    director.touchStart=function(e){
+				    	switch (director.current){
+				    		case 'menu': 
+				    			if(BKGM.checkMouseBox(e,menulol)) {
+				    				charactor=new BKGM.Charactor('lol',{blit:Game.resource.images["lol_blit"],hand:Game.resource.images["lol_hand"],main:Game.resource.images["lol_main"],arm:Game.resource.images["lol_3"]});
+				    				charactor.x=Game.WIDTH/2;
+				    				initHero();
+				    				director.switch("run"); 
+				    			}
+				    			if(BKGM.checkMouseBox(e,menudota)) {
+				    				charactor=new BKGM.Charactor('dota',{pudge:Game.resource.images["dota_pudge"],hand:Game.resource.images["dota_hand"],main:Game.resource.images["dota_main"],arm:Game.resource.images["dota_3"]});
+				    				charactor.x=Game.WIDTH/2;
+				    				initHero();
+				    				director.switch("run"); 
+				    			}
+				    			break;
+				    		case 'run': 
+				    			if(e.y<200)
+				    				charactor.setTarget(e);
+				    			else charactor.shoot(e);
+				    			break;
+				    	}
+				    }
+		   //        	var sprite = new BKGM.Sprite({image:Game.resource.images["chim"],rows:2,columns:2}).addAnimation("run",[0,1],200,"loop").playAnimation("run");
+					// var testactor=new BKGM.Actor().addSprite(sprite);
+					// testactor.touchStart=function(e){
+					// 	var s0=Game.resource.audios["slap"];
+					// 	s0.forceplay();
+					// 	// dmno.play()
+					// }
 				    director.taskOnce("setup", function(){
 				        Game.speed = 3 * Game.SCALE;
 				        Game.highscore = 0;
-				        Game.drop  = new BKGM.Drop(Game);
-				        Game.blocks = new BKGM.Blocks(Game);
-				        Game.blocks.spawn(0);
+				        // Game.drop  = new BKGM.Drop(Game);
+				        // Game.blocks = new BKGM.Blocks(Game);
+				        // Game.blocks.spawn(0);
 				        
 				        Game.score = 0;
 				        //Game.highscore = readLocalData("highscore", 0);
 				    });
 				    
-				    director.task("drop.tail", function(){
-				        Game.drop.updateTail()
-				    });
-				    
-				    director.task("drop.update", function(){
-				        Game.drop.updatePosition()				        
-				    });
-				    
-				    director.task("drop.draw", function(){
-				        Game.drop.draw()
-				        Game.fill(255, 255, 255, 1)
-				        var tail = Game.drop.tail;
-				        Game.text(Game.score, tail[tail.length - 1], Game.drop.y + tail.length*Game.speed + 20, 30 * Game.SCALE);
-				    });
-				    director.task("testactor.update", function(){
-				        mb.update(Game);
-				    });
-				    director.task("testactor.draw", function(){
-				        testactor._draw(Game);
-				    });
-
-				    director.task("blocks.update", function(){
-				    	Game.blocks.update()
-				        if (Game.blocks.pass(Game.drop)) {
-				            //sound(SOUND_PICKUP, 32947)
-				            Game.score++;
-				        }
-
-				        if (Game.drop.collide(Game.blocks.now())) {
-				            director.switch("ready");
-				        }
-				    });
-
-				    director.task("blocks.draw", function(){
-				    	Game.blocks.draw();
-				    });
-				    
-				    // director.task("guide", function(){
-				    //     fill(255, 255, 255, 255)
-				    //     fontSize(16)
-				    //     text("Tilt your device to control the drop", WIDTH/2, drop.y - 50 * Game.SCALE)
-				    //     text("Avoid obstacles to score", WIDTH/2, drop.y - 80 * Game.SCALE)
-				    //     if CurrentTouch.state == ENDED then
-				    //         director.switch("ready")
-				    //     }
-				    // });
+				   
 				    
 				    director.task("background", function(){
-				        var c = Game.random(0, 30);
-				        Game.background(c, c, c, 1);
+				        Game.background(100, 50, 100, 1);
+				    }, true);
+				    var heroes=[];
+				    function initHero(){
+				    	for (var i = 3; i >= 0; i--) {
+					    	var sprite = new BKGM.Sprite({image:Game.resource.images["chim"],rows:2,columns:2}).addAnimation("run",[0,1],200,"loop").playAnimation("run");
+					    	var posx=(Math.random()*600)+100;
+					    	var posy=(Math.random()*200)+200;
+							var hero=new BKGM.Enemy(i%4==0||i%4==1?"dota":"lol",i%2==0?"water":"sky");
+							hero.x=posx;
+							hero.y=posy;
+							hero.addSprite(sprite);
+							hero.setTarget({x:posx,y:posy});
+							hero.box = new BKGM.Box(new BKGM.Vector(hero.x-hero.width/2-10,hero.y-hero.height/2-5), hero.width-20, hero.height-10);
+							// var bb = new BKGM.Behavior(posx,posy, 10, hero);
+							heroes.push(hero);
+							charactor.hook.collideArray.push(hero);
+					    };
+				    }
+				    
+				    director.taskActors("heroes", heroes);
+				    director.task("charactor.draw", function(){
+				        if(charactor) charactor.draw(Game);
+				    }, true);
+				    director.task("charactor.update", function(){
+				        if(charactor) charactor.update(Game);
 				    });
 				    
 				    director.task("menu", function(){
 				        return {
-				            logo_x : WIDTH / 2,
-				            logo_y : 2 * HEIGHT / 3,
+				            logo_x : Game.WIDTH / 2,
+				            logo_y : 2 * Game.HEIGHT / 3,
 				            buttons : [
 				                { 
-				                    x : WIDTH/2,
-				                    y : HEIGHT/2,
+				                    x : Game.WIDTH/2,
+				                    y : Game.HEIGHT/2,
 				                    w : 300 * Game.SCALE,
 				                    h : 60 * Game.SCALE,
 				                    s : 20 * Game.SCALE,
@@ -221,9 +245,14 @@
 				    
 				    director.switch("menu");
 			    },
-			    draw: function(){
+			    draw: function(Game){
 			        // Runs every interval
-			        director.run();
+			        director.draw(Game);
+			    },
+			    update: function(){
+			    	//Run every 100060 ms
+			    	// 
+			    	director.run();
 			    }
 			}).run();
         }

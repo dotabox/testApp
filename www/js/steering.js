@@ -156,7 +156,7 @@
 (function (key) {
     BKGM.Behavior = function (posX, posY, totalMass, view) {
         var privateVars = {
-            MAX_VELOCITY: 9,
+            MAX_VELOCITY: 4,
             mass: totalMass,
             actorView: view
         };
@@ -164,7 +164,7 @@
         privateVars.position = new BKGM.Vector(posX, posY);
         privateVars.velocity = new BKGM.Vector(-1, -2);
         privateVars.steering = new BKGM.SteeringManager(this);
-        privateVars.target = new BKGM.Vector(310, 240);
+        privateVars.target = new BKGM.Vector(posX, posY);
         privateVars.actorView.addBehavior(this);
 
         // Define a getter function that will only return private members

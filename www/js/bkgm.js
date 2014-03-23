@@ -62,7 +62,7 @@ var BKGM = BKGM||{};
         var _this=this;
         _this.gravity={x:0,y:0,z:0};
         
-        
+        if(BKGM.Codea)
         if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
             window.addEventListener('devicemotion', function(eventData){
                         if(eventData.accelerationIncludingGravity)
@@ -182,7 +182,7 @@ var BKGM = BKGM||{};
             this.HEIGHT  = this.canvas.height;
             this.SCALE = Math.min(this.HEIGHT/1152,this.WIDTH/768) ;
             this.setup();
-            if(this.Codea){
+            if(BKGM.Codea){
                 this.ctx.translate(0, this.canvas.height);
                 this.ctx.scale(1,-1);
             }            
@@ -282,6 +282,9 @@ var BKGM = BKGM||{};
         removeChild:function(child){
             this.childrentList.splice(this.childrentList.indexOf(child),1);
             return this;
+        },
+        addStates:function(states){
+            this.states=states;
         }
         
     }
@@ -300,23 +303,7 @@ var BKGM = BKGM||{};
         y -= _this.canvas.offsetTop;
         return {x:x,y:y}
     }
-    var checkEventActor=function(e,_actor){
-        var originX=_actor.x,originY=_actor.y;
-        var mouseX=e.x,mouseY=e.y;
-        var dx = mouseX - originX, dy = mouseY - originY;
-        // distance between the point and the center of the rectangle
-        var h1 = Math.sqrt(dx*dx + dy*dy);
-        var currA = Math.atan2(dy,dx);
-        // Angle of point rotated around origin of rectangle in opposition
-        var newA = currA - _actor.rotation;
-        // New position of mouse point when rotated
-        var x2 = Math.cos(newA) * h1;
-        var y2 = Math.sin(newA) * h1;
-        // Check relative to center of rectangle
-        if (x2 > -0.5 * _actor.width && x2 < 0.5 * _actor.width && y2 > -0.5 * _actor.height && y2 < 0.5 * _actor.height){
-            return true;
-        }
-    }
+    
     var addMouseTouchEvent= function(_this){
         
         _this.currentTouch={ state:"ENDED" };
@@ -325,12 +312,14 @@ var BKGM = BKGM||{};
                 var touch = event.touches[i];  
                 var e=checkMousePos(touch,_this);
                  _this.currentTouch.state="START";
-                for (var j = _this.childrentList.length - 1; j >= 0; j--) {
-                    if(_this.childrentList[j]._eventenable &&checkEventActor( e,_this.childrentList[j])) {
-                        if(_this.childrentList[j].touchStart) _this.childrentList[j].touchStart(e)
-                        return;
-                    }
-                };
+
+                // for (var j = _this.childrentList.length - 1; j >= 0; j--) {
+                //     if(_this.childrentList[j]._eventenable &&checkEventActor( e,_this.childrentList[j])) {
+                //         if(_this.childrentList[j].touchStart) _this.childrentList[j].touchStart(e)
+                //         return;
+                //     }
+                // };
+                if(_this.states && _this.states._touchStart) _this.states._touchStart(e); else
                 if(_this.touchStart) _this.touchStart(e);              
             }
            
@@ -355,12 +344,12 @@ var BKGM = BKGM||{};
             var e=checkMousePos(event,_this);
             _this._mouseDown=true;
             _this.currentTouch.state="START";
-            for (var i = _this.childrentList.length - 1; i >= 0; i--) {
-                if(_this.childrentList[i]._eventenable &&checkEventActor( e,_this.childrentList[i])) {
-                    _this.childrentList[i].mouseDown(e)
-                    return;
-                }
-            };
+            // for (var i = _this.childrentList.length - 1; i >= 0; i--) {
+            //     if(_this.childrentList[i]._eventenable &&checkEventActor( e,_this.childrentList[i])) {
+            //         _this.childrentList[i].mouseDown(e)
+            //         return;
+            //     }
+            // };
             if(_this.mouseDown) _this.mouseDown(e);
         }, false);
         _this.canvas.addEventListener('mousemove', function(event) {
@@ -371,12 +360,12 @@ var BKGM = BKGM||{};
             var e=checkMousePos(event,_this);
             _this._mouseDown=false;
             _this.currentTouch.state="ENDED";
-            for (var i = _this.childrentList.length - 1; i >= 0; i--) {
-                if(_this.childrentList[i]._eventenable &&checkEventActor( e,_this.childrentList[i])) {
-                    _this.childrentList[i].mouseUp(e)
-                    return;
-                }
-            };
+            // for (var i = _this.childrentList.length - 1; i >= 0; i--) {
+            //     if(_this.childrentList[i]._eventenable &&checkEventActor( e,_this.childrentList[i])) {
+            //         _this.childrentList[i].mouseUp(e)
+            //         return;
+            //     }
+            // };
             if(_this.mouseUp) _this.mouseUp(e);
         }, false);
     }
@@ -512,7 +501,6 @@ var BKGM = BKGM||{};
     };
 })();
 (function(){
-    var BKGM = BKGM||{};
     BKGM.loadJS=function(url,callback){
         // Adding the script tag to the head as suggested before
         var head = document.getElementsByTagName('head')[0];
@@ -527,6 +515,26 @@ var BKGM = BKGM||{};
 
         // Fire the loading
         head.appendChild(script);
+    };
+    BKGM.checkMouseBox=function(e,obj){          
+        return (e.x>obj.x&&e.y>obj.y&&e.x<(obj.x+obj.w)&&e.y<(obj.y+obj.h));
+    };
+    BKGM.checkEventActor=function(e,_actor){
+        var originX=_actor.x,originY=_actor.y;
+        var mouseX=e.x,mouseY=e.y;
+        var dx = mouseX - originX, dy = mouseY - originY;
+        // distance between the point and the center of the rectangle
+        var h1 = Math.sqrt(dx*dx + dy*dy);
+        var currA = Math.atan2(dy,dx);
+        // Angle of point rotated around origin of rectangle in opposition
+        var newA = currA - _actor.rotation;
+        // New position of mouse point when rotated
+        var x2 = Math.cos(newA) * h1;
+        var y2 = Math.sin(newA) * h1;
+        // Check relative to center of rectangle
+        if (x2 > -0.5 * _actor.width && x2 < 0.5 * _actor.width && y2 > -0.5 * _actor.height && y2 < 0.5 * _actor.height){
+            return true;
+        }
     };
     BKGM.ajax = function(obj){
         var ajax = {
@@ -597,72 +605,7 @@ var BKGM = BKGM||{};
         return this;
     }
 })();
-(function(){
-    BKGM.Sprite = function(obj){
-        if(obj){
-            this.image=obj.image||this.image;            
-            this.rows=obj.rows||this.rows;
-            this.columns=obj.columns||this.columns;
-            this.maxIndex=this.columns*this.rows-2;
-            this.width=this.image.width/this.columns;
-            this.height=this.image.height/this.rows;
-            this.posX=0;
-            this.posY=0;
-        }
-    }
-    BKGM.Sprite.prototype= {
-        rows:1,
-        columns:1,
-        image:null,
-        // changeFS:200,
-        lastTime:0,
-        animation:{},
-        init:function(){
-            // this.actor=_actor;            
-            // this.frame=0;
-            
-            return this;
-        },
-        addAnimation:function(name, arr, time, endfn){
-            this.animation[name]={arr:arr,time:time};
-            this.endfn=endfn;
-            return this;
-        },
-        playAnimation:function(name){
-            this.currentAnimation=this.animation[name];
-            this.animationIndex=0;
-            this.index=this.currentAnimation.arr[0];
-            return this;
-        },
-        switchAnimationIndex:function(index){
-            var self = this;
-            this.state = {x:index%self.columns,y:index/self.rows>>0};
-        },        
-        draw:function(Game){
-            var now=new Date();
-            var dt = now - this.lastTime;
-            if (dt > this.currentAnimation.time){
-                if(this.animationIndex<this.maxIndex){
-                     this.lastTime = now;
-                    
-                    var index=this.currentAnimation.arr[this.animationIndex];
-                    this.switchAnimationIndex(index);
-                    this.posX=this.width*this.state.x;
-                    this.posY=this.height*this.state.y;
-                    this.animationIndex++;
-                } else if (this.animationIndex==this.maxIndex){
-                    if (this.endfn) 
-                        if (this.endfn=="loop") {
-                            this.animationIndex=0;
-                            this.index=this.currentAnimation.arr[0];
-                        } else this.endfn();
-                }
-               
-            }
-            Game.ctx.drawImage(this.image,this.posX,this.posY,this.width,this.height,-this.width/2,-this.height/2,this.width,this.height)
-        }
-    };
-})();
+
 (function(){
     BKGM.Ads=function(adunit){
         this.adunit=adunit;
