@@ -38,8 +38,8 @@
             canvas.width  = 800;
             canvas.height = 600;
             var ctx = canvas.getContext("2d");
-            // document.body.appendChild(canvas);
-
+            document.body.appendChild(canvas);
+            alert(document.body)
             var director;
             var _fb;
             
