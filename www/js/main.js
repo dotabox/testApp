@@ -125,6 +125,7 @@
 				    },true);
 				    var charactor;
 				    var _down=function(e){
+				    	alert("donww")
 				    	switch (director.current){
 				    		case 'menu': 
 				    			if(BKGM.checkMouseBox(e,menulol)) {
@@ -164,7 +165,7 @@
 				        Game.speed = 3 * Game.SCALE;
 				        Game.highscore = Game.GameScore.getScore();
 				        Game.startTime=Game.time;
-				        Game.countdown=30000;
+				        Game.countdown=3000;
 				        Game.score = 0;
 				        Game.font='SourceSansPro';
 				        Game.gameover=false;

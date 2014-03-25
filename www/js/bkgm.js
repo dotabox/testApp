@@ -192,8 +192,14 @@ var BKGM = BKGM||{};
                 document.body.appendChild(debug);
             this.WIDTH = this.canvas.width;
             this.HEIGHT  = this.canvas.height;
-            this.SCALEX = this.WIDTH/window.innerWidth;
-            this.SCALEY = this.HEIGHT/window.innerHeight;
+            if(BKGM._isCordova){
+                this.SCALEX = this.WIDTH/window.innerWidth;
+                this.SCALEY = this.HEIGHT/window.innerHeight;
+            }else{
+                this.SCALEX = this.WIDTH/window.innerWidth;
+                this.SCALEY = this.HEIGHT/document.body.scrollHeight;                
+            }
+            
             console.log(this.SCALEX,this.SCALEY);
             this.SCALE = Math.min(this.HEIGHT/400,this.WIDTH/400) ;
             this.setup();
