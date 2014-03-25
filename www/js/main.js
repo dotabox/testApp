@@ -52,8 +52,8 @@
 			        // BKGM.debug=1;
 			        Game.addRes(preload);
 			        Game.GameScore=new BKGM.ScoreLocal("dotavslol");
-			       	_fb = new BKGM.FBConnect();
-			       	_fb.init({appId:"296632137153437"});
+			       	// _fb = new BKGM.FBConnect();
+			       	// _fb.init({appId:"296632137153437"});
 			       	// Game.touchStart=function(e){
 			       	// 		// _fb.postCanvas("Test post diem");
 			       	// 		// mb.setTarget(e.x,e.y);
@@ -72,27 +72,27 @@
 				    	"background",
 				    	"lolvsdota"				    	
 				    ]);
-				    // director.state("ready", [
-				    // 	"setcount",
-				    // 	"background",				    	
-				    // 	"count"
-				    // 	// "charactor.draw"
-				    // ]);
-				    // director.state("run", [
-				    // 	"setup",
-				    // 	"background",
-				    // 	"countdown",
-				    // 	"point",
-				    // 	"charactor.update",				    	
-				    // 	"heroes",
-				    // 	"charactor.draw"
-				    // ]);
-				    // director.state("gameover", [
-				    // 	"calscore",
-				    // 	"background",		    	
-				    // 	"scoreBoard",
-				    // 	"try_postscore"
-				    // ]);
+				    director.state("ready", [
+				    	"setcount",
+				    	"background",				    	
+				    	"count"
+				    	// "charactor.draw"
+				    ]);
+				    director.state("run", [
+				    	"setup",
+				    	"background",
+				    	"countdown",
+				    	"point",
+				    	"charactor.update",				    	
+				    	"heroes",
+				    	"charactor.draw"
+				    ]);
+				    director.state("gameover", [
+				    	"calscore",
+				    	"background",		    	
+				    	"scoreBoard",
+				    	"try_postscore"
+				    ]);
 
 				    var menudota={
 				    	x:150,
