@@ -13,6 +13,8 @@ window.requestAnimFrame = (function(){
 var BKGM = BKGM||{};
 
 (function(){
+    
+
     ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
     var lastTime=0;
     var t = 0;
@@ -38,6 +40,7 @@ var BKGM = BKGM||{};
                 t -= frameTime;//Dung de xac dinh so buoc' tinh toan
                 sceneTime += frameTime;
                 _statesLoop[i].update(_statesLoop[i], sceneTime);
+                _statesLoop[i].time=sceneTime;
             }   
             _statesLoop[i].loop(_statesLoop[i]);
         };
@@ -61,8 +64,10 @@ var BKGM = BKGM||{};
     BKGM = function(obj){
         var _this=this;
         _this.gravity={x:0,y:0,z:0};
-        
-        if(BKGM.Codea)
+        BKGM.SINGLE_TOUCH=0;
+        BKGM.MULTI_TOUCH=1;
+        BKGM.TYPE_TOUCH=BKGM.SINGLE_TOUCH;
+        if(BKGM.DeviceMotion)
         if ((window.DeviceMotionEvent) || ('listenForDeviceMovement' in window)) {
             window.addEventListener('devicemotion', function(eventData){
                         if(eventData.accelerationIncludingGravity)
@@ -132,7 +137,7 @@ var BKGM = BKGM||{};
         this.width=this.canvas.width;
         this.height=this.canvas.height;
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.textAlign = "center";
+        // this.ctx.textAlign = "center";
         
 
         this.ctx.imageSmoothingEnabled= true;
@@ -166,10 +171,14 @@ var BKGM = BKGM||{};
         };
         //this.ctx.globalCompositeOperation = 'source-atop';
         addMouseTouchEvent(this);
+        addKeyEvent(this);
         return this;
     }
     BKGM.prototype = {
-        loop:function(_this){            
+        time:0,
+        font:"Times New Roman",
+        loop:function(_this){
+            if(BKGM.debug)          
             _this.FPS=_this._fps.getFPS();            
             _this.ctx.clearRect(0, 0, _this.canvas.width, _this.canvas.height);
             _this._staticDraw();
@@ -177,10 +186,10 @@ var BKGM = BKGM||{};
             return _this;
         },
         run:function(){
-            document.body.appendChild(debug);
+            if(BKGM.debug)document.body.appendChild(debug);
             this.WIDTH = this.canvas.width;
             this.HEIGHT  = this.canvas.height;
-            this.SCALE = Math.min(this.HEIGHT/1152,this.WIDTH/768) ;
+            this.SCALE = Math.min(this.HEIGHT/400,this.WIDTH/400) ;
             this.setup();
             if(BKGM.Codea){
                 this.ctx.translate(0, this.canvas.height);
@@ -234,14 +243,25 @@ var BKGM = BKGM||{};
             this._rectMode=Input;
             return this;
         },
-        text:function( string, x, y, fontSize){
+        setFont:function(font){
+            this.font=font;
+        },
+        text:function( string, x, y, fontSize,center){
             this.ctx.save();
-            this.ctx.translate(0, this.canvas.height);
-            this.ctx.scale(1,-1);  
-            
-            this.ctx.font = fontSize+'px Times New Roman'||'40px Times New Roman';
-            this.ctx.fillText(string, x, this.canvas.height-(y-fontSize/2));
+            if(BKGM.Codea){
+                
+                this.ctx.translate(0, this.canvas.height);
+                this.ctx.scale(1,-1);            
+                this.ctx.font = fontSize+'px '+this.font||'40px '+this.font;
+                this.ctx.fillText(string, x, this.canvas.height-(y-fontSize/2));
+                
+            } else {
+                if(center) this.ctx.textAlign = "center";
+                this.ctx.font = fontSize+'px '+this.font||'40px '+this.font;
+                this.ctx.fillText(string, x, (y+fontSize/2));
+            }
             this.ctx.restore();
+           
             return this;
         },
         circle:function( x, y, diameter){
@@ -285,9 +305,64 @@ var BKGM = BKGM||{};
         },
         addStates:function(states){
             this.states=states;
+        },
+        _swipe:function(e){
+            var s=this._startWipe;
+            var x_1=s.x,y_1=s.y;
+            var x_2=e.x,y_2=e.y;
+            var delta_x = x_2 - x_1,
+            delta_y = y_2 - y_1;
+            var threadsold=_THREADSOLD*this.SCALE;
+            if ( (delta_x < threadsold && delta_x > -threadsold) || (delta_y < threadsold && delta_y > -threadsold) ) return false;
+
+            var tan = Math.abs(delta_y / delta_x);
+            
+            switch( ( (delta_y > 0 ? 1 : 2) + (delta_x > 0 ? 0 : 2) ) * (tan > 1? 1 : -1) ){
+                case  1: //position.TOP_RIGHT:
+                case  3: //position.TOP_LEFT:
+                    this.swipe('DOWN');
+                break;
+                case -1: //-position.TOP_RIGHT:
+                case -2: //-position.BOTTOM_RIGHT:
+                    this.swipe('RIGHT');
+                break;
+                case -3: //-position.TOP_LEFT:
+                case -4: //-position.BOTTOM_LEFT:
+                    this.swipe('LEFT');
+                break;
+                case  2: //position.BOTTOM_RIGHT:
+                case  4: //position.BOTTOM_LEFT:
+                    this.swipe('UP');
+                break;
+            }
+        },
+        _touchStart:function(e){
+            if(this.swipe && BKGM.TYPE_TOUCH==BKGM.SINGLE_TOUCH) this._startWipe=e;
+            if(this.touchStart) this.touchStart(e);
+        },
+        _touchEnd:function(e){
+
+            if(this.swipe && BKGM.TYPE_TOUCH==BKGM.SINGLE_TOUCH) this._swipe(e);
+            if(this.touchEnd) this.touchEnd(e);
+        },
+        _touchDrag:function(e){
+            if(this.touchDrag) this.touchDrag(e);
+        },
+        _mouseDown:function(e){
+            if(this.swipe && BKGM.TYPE_TOUCH==BKGM.SINGLE_TOUCH) this._startWipe=e;
+            if(this.mouseDown) this.mouseDown(e);
+        },
+        _mouseUp:function(e){
+            if(this.swipe && BKGM.TYPE_TOUCH==BKGM.SINGLE_TOUCH) this._swipe(e);
+            if(this.mouseUp) this.mouseUp(e);
+        },
+        _mouseDrag:function(e){
+            if(this.mouseDrag) this.mouseDrag(e);
         }
+
         
     }
+    var _THREADSOLD = 2; //pixels
     var checkMousePos=function(e,_this){
         var x;
         var y;
@@ -301,48 +376,113 @@ var BKGM = BKGM||{};
         } 
         x -= _this.canvas.offsetLeft;
         y -= _this.canvas.offsetTop;
-        return {x:x,y:y}
+        return {x:x,y:y,number:e.identifier}
     }
     
     var addMouseTouchEvent= function(_this){
         
         _this.currentTouch={ state:"ENDED" };
         _this.canvas.addEventListener('touchstart', function(event) {
+            this._istouch=true;
+            var touchs=[];
+            if(BKGM.TYPE_TOUCH===BKGM.SINGLE_TOUCH)
+                if ((!window.navigator.msPointerEnabled && event.touches.length > 1) ||
+                event.targetTouches > 1) {
+                  return; // Ignore if touching with more than 1 finger
+                }
+            
             for (var i = 0; i < event.touches.length; i++) {
-                var touch = event.touches[i];  
+                
+                if(BKGM.TYPE_TOUCH===BKGM.SINGLE_TOUCH) {
+                    var touch = event.touches[0];
+                    var e=checkMousePos(touch,_this);
+                    _this.currentTouch.state="START";
+                    if(_this.states && _this.states._touchStart) _this.states._touchStart(e); else
+                    if(_this._touchStart) _this._touchStart(e);
+                    break;
+                }
+                var touch = event.touches[i];
                 var e=checkMousePos(touch,_this);
-                 _this.currentTouch.state="START";
-
-                // for (var j = _this.childrentList.length - 1; j >= 0; j--) {
-                //     if(_this.childrentList[j]._eventenable &&checkEventActor( e,_this.childrentList[j])) {
-                //         if(_this.childrentList[j].touchStart) _this.childrentList[j].touchStart(e)
-                //         return;
-                //     }
-                // };
-                if(_this.states && _this.states._touchStart) _this.states._touchStart(e); else
-                if(_this.touchStart) _this.touchStart(e);              
+                touchs.push(e);
             }
+        
+            if(BKGM.TYPE_TOUCH===BKGM.MULTI_TOUCH){
+                if(_this.states && _this.states._touchStart) _this.states._touchStart(touchs); else
+                if(_this._touchStart) _this._touchStart(touchs);  
+            }
+            // for (var j = _this.childrentList.length - 1; j >= 0; j--) {
+            //     if(_this.childrentList[j]._eventenable &&checkEventActor( e,_this.childrentList[j])) {
+            //         if(_this.childrentList[j].touchStart) _this.childrentList[j].touchStart(e)
+            //         return;
+            //     }
+            // };
+            // console.log(touch)
+                 
+
+            
+            
+            
            
         }, false);
         _this.canvas.addEventListener('touchmove', function(event) {
-            for (var i = 0; i < event.touches.length; i++) {
-                var touch = event.touches[i];
-                _this.currentTouch.state="MOVING";
-                if(_this.touchDrag) _this.touchDrag(checkMousePos(touch,_this));
+            var touchs=[];
+            event.preventDefault();
+            for (var i = 0; i < event.changedTouches.length; i++) {
+                var touch = event.changedTouches[i];
+                if(BKGM.TYPE_TOUCH==BKGM.SINGLE_TOUCH && touch.identifier==0) {                   
+                    _this.currentTouch.state="MOVING";
+                    if(_this._touchDrag) _this._touchDrag(checkMousePos(touch,_this));
+                    break;
+                }
+                var touch = event.changedTouches[i];
+                var e=checkMousePos(touch,_this);
+                touchs.push(e);
+                
+            }
+            if(BKGM.TYPE_TOUCH==BKGM.MULTI_TOUCH){
+                if(_this._touchDrag) _this._touchDrag(touchs);  
             }
             
         }, false);
         _this.canvas.addEventListener('touchend', function(event) {
-            for (var i = 0; i < event.touches.length; i++) {
-                var touch = event.touches[i];   
-                _this.currentTouch.state="ENDED";
-                if(_this.touchEnd) _this.touchEnd(checkMousePos(touch,_this));             
+            var touchs=[];
+            if(BKGM.TYPE_TOUCH===BKGM.SINGLE_TOUCH)
+                if ((!window.navigator.msPointerEnabled && event.touches.length > 0) ||
+                event.targetTouches > 0) {
+              return; // Ignore if still touching with one or more fingers
             }
+           
+            for (var i = 0; i < event.changedTouches.length; i++) {
+               
+                if(BKGM.TYPE_TOUCH===BKGM.SINGLE_TOUCH) {
+                    this._istouch=false;            
+                    // console.log(touch)  
+                     var touch = event.changedTouches[0]; 
+                    _this.currentTouch.state="ENDED";
+                    var e=checkMousePos(touch,_this);
+                    if(_this.states && _this.states.touchEnd) _this.states._touchEnd(e); else
+                    if(_this._touchEnd) _this._touchEnd(e); 
+                    break;
+                }
+                var touch = event.changedTouches[i]; 
+                // console.log(touch)  
+                var e=checkMousePos(touch,_this);
+                touchs.push(e)
+                
+                             
+            }
+            if(BKGM.TYPE_TOUCH===BKGM.MULTI_TOUCH){
+                if(_this.states && _this.states.touchEnd) _this.states._touchEnd(touchs); else
+                if(_this._touchEnd) _this._touchEnd(touchs);
+            }
+            
+            
             
         }, false);
         _this.canvas.addEventListener('mousedown', function(event) {
+            if (this._istouch) return;
             var e=checkMousePos(event,_this);
-            _this._mouseDown=true;
+            _this._ismouseDown=true;
             _this.currentTouch.state="START";
             // for (var i = _this.childrentList.length - 1; i >= 0; i--) {
             //     if(_this.childrentList[i]._eventenable &&checkEventActor( e,_this.childrentList[i])) {
@@ -350,15 +490,23 @@ var BKGM = BKGM||{};
             //         return;
             //     }
             // };
-            if(_this.mouseDown) _this.mouseDown(e);
+            if(_this.states && _this.states._mouseDown) _this.states._mouseDown(e); else
+                    if(_this._mouseDown) _this._mouseDown(e);
         }, false);
         _this.canvas.addEventListener('mousemove', function(event) {
-            if(_this._mouseDown) _this.currentTouch.state="MOVING";
-            if(_this.mouseDrag) _this.mouseDrag(checkMousePos(event,_this));
+            if (this._istouch) return;
+            var e=checkMousePos(event,_this);
+            if(_this._ismouseDown) _this.currentTouch.state="MOVING";
+            if(this._ismouseDown){
+                if(_this.states && _this.states._mouseDrag) _this.states._mouseDrag(e); else
+                    if(_this._mouseDrag) _this._mouseDrag(e);
+            }
+            
         }, false);
         _this.canvas.addEventListener('mouseup', function(event) {
+            if (this._istouch) return;
             var e=checkMousePos(event,_this);
-            _this._mouseDown=false;
+            _this._ismouseDown=false;
             _this.currentTouch.state="ENDED";
             // for (var i = _this.childrentList.length - 1; i >= 0; i--) {
             //     if(_this.childrentList[i]._eventenable &&checkEventActor( e,_this.childrentList[i])) {
@@ -366,8 +514,155 @@ var BKGM = BKGM||{};
             //         return;
             //     }
             // };
-            if(_this.mouseUp) _this.mouseUp(e);
+            if(_this.states && _this.states._mouseUp) _this.states._mouseUp(e); else
+                    if(_this._mouseUp) _this._mouseUp(e);
         }, false);
+    }
+    var addKeyEvent=function(_this){
+        BKGM.KEYS = {
+
+            /** @const */ ENTER:13,
+            /** @const */ BACKSPACE:8,
+            /** @const */ TAB:9,
+            /** @const */ SHIFT:16,
+            /** @const */ CTRL:17,
+            /** @const */ ALT:18,
+            /** @const */ PAUSE:19,
+            /** @const */ CAPSLOCK:20,
+            /** @const */ ESCAPE:27,
+            /** @const */ PAGEUP:33,
+            /** @const */ PAGEDOWN:34,
+            /** @const */ END:35,
+            /** @const */ HOME:36,
+            /** @const */ LEFT:37,
+            /** @const */ UP:38,
+            /** @const */ RIGHT:39,
+            /** @const */ DOWN:40,
+            /** @const */ INSERT:45,
+            /** @const */ DELETE:46,
+            /** @const */ 0:48,
+            /** @const */ 1:49,
+            /** @const */ 2:50,
+            /** @const */ 3:51,
+            /** @const */ 4:52,
+            /** @const */ 5:53,
+            /** @const */ 6:54,
+            /** @const */ 7:55,
+            /** @const */ 8:56,
+            /** @const */ 9:57,
+            /** @const */ a:65,
+            /** @const */ b:66,
+            /** @const */ c:67,
+            /** @const */ d:68,
+            /** @const */ e:69,
+            /** @const */ f:70,
+            /** @const */ g:71,
+            /** @const */ h:72,
+            /** @const */ i:73,
+            /** @const */ j:74,
+            /** @const */ k:75,
+            /** @const */ l:76,
+            /** @const */ m:77,
+            /** @const */ n:78,
+            /** @const */ o:79,
+            /** @const */ p:80,
+            /** @const */ q:81,
+            /** @const */ r:82,
+            /** @const */ s:83,
+            /** @const */ t:84,
+            /** @const */ u:85,
+            /** @const */ v:86,
+            /** @const */ w:87,
+            /** @const */ x:88,
+            /** @const */ y:89,
+            /** @const */ z:90,
+            /** @const */ SELECT:93,
+            /** @const */ NUMPAD0:96,
+            /** @const */ NUMPAD1:97,
+            /** @const */ NUMPAD2:98,
+            /** @const */ NUMPAD3:99,
+            /** @const */ NUMPAD4:100,
+            /** @const */ NUMPAD5:101,
+            /** @const */ NUMPAD6:102,
+            /** @const */ NUMPAD7:103,
+            /** @const */ NUMPAD8:104,
+            /** @const */ NUMPAD9:105,
+            /** @const */ MULTIPLY:106,
+            /** @const */ ADD:107,
+            /** @const */ SUBTRACT:109,
+            /** @const */ DECIMALPOINT:110,
+            /** @const */ DIVIDE:111,
+            /** @const */ F1:112,
+            /** @const */ F2:113,
+            /** @const */ F3:114,
+            /** @const */ F4:115,
+            /** @const */ F5:116,
+            /** @const */ F6:117,
+            /** @const */ F7:118,
+            /** @const */ F8:119,
+            /** @const */ F9:120,
+            /** @const */ F10:121,
+            /** @const */ F11:122,
+            /** @const */ F12:123,
+            /** @const */ NUMLOCK:144,
+            /** @const */ SCROLLLOCK:145,
+            /** @const */ SEMICOLON:186,
+            /** @const */ EQUALSIGN:187,
+            /** @const */ COMMA:188,
+            /** @const */ DASH:189,
+            /** @const */ PERIOD:190,
+            /** @const */ FORWARDSLASH:191,
+            /** @const */ GRAVEACCENT:192,
+            /** @const */ OPENBRACKET:219,
+            /** @const */ BACKSLASH:220,
+            /** @const */ CLOSEBRAKET:221,
+            /** @const */ SINGLEQUOTE:222
+        };
+
+        /**
+         * @deprecated
+         * @type {Object}
+         */
+        BKGM.Keys= BKGM.KEYS;
+
+        /**
+         * Shift key code
+         * @type {Number}
+         */
+        BKGM.SHIFT_KEY=    16;
+
+        /**
+         * Control key code
+         * @type {Number}
+         */
+        BKGM.CONTROL_KEY=  17;
+
+        /**
+         * Alt key code
+         * @type {Number}
+         */
+        BKGM.ALT_KEY=      18;
+
+        /**
+         * Enter key code
+         * @type {Number}
+         */
+        BKGM.ENTER_KEY=    13;
+
+        /**
+         * Event modifiers.
+         * @type enum
+         */
+        BKGM.KEY_MODIFIERS= {
+
+            /** @const */ alt:        false,
+            /** @const */ control:    false,
+            /** @const */ shift:      false
+        };
+        window.addEventListener('keydown', function(event) {
+            _this._keyDown=true;
+            if(_this.keyDown) _this.keyDown(event);
+        },false)
     }
 })();
 (function(){
@@ -390,44 +685,13 @@ var BKGM = BKGM||{};
         setAudio : function( name ,callback) {
             var self=this;
             if(BKGM._isCordova){
-                // this.src=getPhoneGapPath()+name+'.mp3';
-                // alert(getPhoneGapPath());
                 this.src = getPhoneGapPath() + "/" + name;
-                // var src='http://static.weareswoop.com/audio/charlestown/track_1.mp3';
-                // alert(name)
                 if (callback && !self.call) {callback();self.call=1;}
-                // var src='/android_asset/www/audio/gameover.ogg';
-                 
-                //alert(this.src)
-                // this.audio = new Media(name+'.m4a', function() { 
-                //    self._onload();
-                //    alert("loadok")
-                //    if (callback) callback();
-                // }
-                // ,function(error){
-                //     alert(error)
-                // },
-                // function(mediaStatus){
-                //     // if(mediaStatus==4 && this.audio.getDuration()==media.getCurrentPosition()){
-                //     //     if(self.ended) self.ended();
-                //     //     if(self._loop) {
-                //     //         self.play();
-                //     //     }
-                //     // }
-                //     alert(mediaStatus)
-                // });
+               
             }else {
                 this.audio= new Audio(name);
                 this.audio.preload = 'auto';
-                // var source = document.createElement('source');
-                // if (this.audio.canPlayType("audio/ogg; codecs=vorbis")) {
-                //     source.type= 'audio/ogg';
-                //     source.src= name+'.ogg';
-                // } else {
-                //     source.type= 'audio/mpeg';
-                //     source.src= name+'.mp3';
-                // }
-                // this.audio.appendChild(source);
+              
 
                 this.audio.load();
                 
@@ -515,6 +779,32 @@ var BKGM = BKGM||{};
 
         // Fire the loading
         head.appendChild(script);
+    };
+    window.extend = function (subc, superc) {
+        var subcp = subc.prototype;
+
+        // Class pattern.
+        var BKGMObj = function () {
+        };
+        BKGMObj.prototype = superc.prototype;
+
+        subc.prototype = new BKGMObj();       // chain prototypes.
+        subc.superclass = superc.prototype;
+        subc.prototype.constructor = subc;
+
+        // Reset constructor. See Object Oriented Javascript for an in-depth explanation of this.
+        if (superc.prototype.constructor === Object.prototype.constructor) {
+            superc.prototype.constructor = superc;
+        }
+
+        // los metodos de superc, que no esten en esta clase, crear un metodo que
+        // llama al metodo de superc.
+        for (var method in subcp) {
+            if (subcp.hasOwnProperty(method)) {
+                subc.prototype[method] = subcp[method];             
+
+            }
+        }
     };
     BKGM.checkMouseBox=function(e,obj){          
         return (e.x>obj.x&&e.y>obj.y&&e.x<(obj.x+obj.w)&&e.y<(obj.y+obj.h));
@@ -605,7 +895,29 @@ var BKGM = BKGM||{};
         return this;
     }
 })();
+(function(){
+    BKGM.ScoreLocal=function(name){
+        this.name=name;
+    }
+    BKGM.ScoreLocal.prototype={
+        submitScore:function(score){
+            var topScore=localStorage.getItem("BKGM."+name+".score");
+            if((topScore && score>topScore)||!topScore)
+                localStorage.setItem("BKGM."+name+".score",score);
 
+        },
+        getScore:function(){
+            var score=localStorage.getItem("BKGM."+name+".score");
+            if(!score) score=0;
+            return score;
+        }
+       
+
+    }
+     
+        
+       
+})();
 (function(){
     BKGM.Ads=function(adunit){
         this.adunit=adunit;

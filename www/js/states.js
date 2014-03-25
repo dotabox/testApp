@@ -19,6 +19,7 @@
             var self = this;
             this.tasks[name] = function(arg) {
                 self.once === false?fn(arg):null;
+                self.once=true;                
             }
         },
         taskActor: function(name, actor){
@@ -48,19 +49,17 @@
                     if (typeof(tresult) !== "undefined") result = tresult;
                 }
             }
-            if (typeof(tresult) === "undefined") this.once = true;
-            else this.switch(tresult);
         },
         draw: function(Game){
             var tasks = this.states[this.current]; 
             for (var i = 0, l = tasks.length; i < l; i++) {
                 if(this.tasksdraw[tasks[i]]){
                     tresult = this.tasksdraw[tasks[i]](Game);
-                    // if (typeof(tresult) !== "undefined") result = tresult;
                 }
             }
         },
         switch: function(state, runNow){
+            var self=this;
             this.once = false;
             this.current = state;
             if (runNow == true) self.run();
@@ -72,8 +71,17 @@
                     return;
                 }
             };
-            if(this.touchStart) this.touchStart(e)
+            if(this.touchStart) this.touchStart(e);
         },  
+        _mouseDown:function(e){
+            for (var i = this.childs.length - 1; i >= 0; i--) {
+                if(this.childs[i]._eventenable && BKGM.checkEventActor(e,this.childs[i])){
+                    if(this.childs[i].mouseDown) this.childs[i].mouseDown(e);
+                    return;
+                }
+            };
+            if(this.mouseDown) this.mouseDown(e);
+        },
         touchStart:function(e){
 
         }

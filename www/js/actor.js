@@ -71,10 +71,11 @@
 				ctx.translate(this.x,this.y);
 				this.rotation ? ctx.rotate(this.rotation):null;
 				this.sprite ? this.sprite.draw(game) : this.draw(game);	
-				ctx.rect(-this.width/2,-this.height/2,this.width,this.height);
-				ctx.strokeStyle = this._strokeStyle;
-				ctx.stroke();
-
+				if(BKGM.debug){
+					ctx.rect(-this.width/2,-this.height/2,this.width,this.height);
+					ctx.strokeStyle = this._strokeStyle;
+					ctx.stroke();
+				}
 				ctx.restore();
 				if(BKGM.debug){
 					ctx.save();
