@@ -125,7 +125,6 @@
 				    },true);
 				    var charactor;
 				    var _down=function(e){
-				    	alert("donww")
 				    	switch (director.current){
 				    		case 'menu': 
 				    			if(BKGM.checkMouseBox(e,menulol)) {

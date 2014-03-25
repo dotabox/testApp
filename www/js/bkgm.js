@@ -469,7 +469,7 @@ var BKGM = BKGM||{};
             for (var i = 0; i < event.changedTouches.length; i++) {
                
                 if(BKGM.TYPE_TOUCH===BKGM.SINGLE_TOUCH) {
-                    this._istouch=false;            
+                    // this._istouch=false;            
                     // console.log(touch)  
                      var touch = event.changedTouches[0]; 
                     _this.currentTouch.state="ENDED";
