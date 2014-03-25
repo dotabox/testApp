@@ -176,6 +176,8 @@ var BKGM = BKGM||{};
     }
     BKGM.prototype = {
         time:0,
+        SCALEX:1,
+        SCALEY:1,
         font:"Times New Roman",
         loop:function(_this){
             if(BKGM.debug)          
@@ -189,6 +191,9 @@ var BKGM = BKGM||{};
             if(BKGM.debug)document.body.appendChild(debug);
             this.WIDTH = this.canvas.width;
             this.HEIGHT  = this.canvas.height;
+            this.SCALEX = this.WIDTH/window.innerWidth;
+            this.SCALEY = this.HEIGHT/window.innerHeight;
+            console.log(this.SCALEX,this.SCALEY);
             this.SCALE = Math.min(this.HEIGHT/400,this.WIDTH/400) ;
             this.setup();
             if(BKGM.Codea){
@@ -376,6 +381,8 @@ var BKGM = BKGM||{};
         } 
         x -= _this.canvas.offsetLeft;
         y -= _this.canvas.offsetTop;
+        x*=_this.SCALEX;
+        y*=_this.SCALEY;
         return {x:x,y:y,number:e.identifier}
     }
     
