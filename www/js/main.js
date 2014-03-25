@@ -8,8 +8,8 @@
             // device APIs are available
             //
             function bodyload(){
-            	// onDeviceReady()
-            	document.addEventListener("deviceready", onDeviceReady, false);
+            	onDeviceReady()
+            	// document.addEventListener("deviceready", onDeviceReady, false);
 
             }
             function onDeviceReady() { 
