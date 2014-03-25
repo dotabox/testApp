@@ -28,7 +28,7 @@
 					   .load("image","dota_3","img/DOTA/DOTA_3.png")
 					   .load("audio","slap","audio/slap.mp3");
 				preload.onloadAll= function(){
-					windowLoad(preload);  
+					//windowLoad(preload);  
 				}
             }
 	// window.onload=function(){
@@ -39,7 +39,7 @@
             canvas.height = 600;
             var ctx = canvas.getContext("2d");
             document.body.appendChild(canvas);
-            alert(document.body)
+
             var director;
             var _fb;
             

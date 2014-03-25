@@ -133,7 +133,6 @@ var BKGM = BKGM||{};
             this.canvas.width  = window.innerWidth;
             this.canvas.height = window.innerHeight;
             document.body.appendChild(this.canvas);
-            alert(document.body)
         }       
         this.width=this.canvas.width;
         this.height=this.canvas.height;
@@ -190,10 +189,7 @@ var BKGM = BKGM||{};
         },
         run:function(){
             if(BKGM.debug && debug)
-                {
-                    document.body.appendChild(debug);
-                    alert(document.body)
-                }
+                document.body.appendChild(debug);
             this.WIDTH = this.canvas.width;
             this.HEIGHT  = this.canvas.height;
             this.SCALEX = this.WIDTH/window.innerWidth;
