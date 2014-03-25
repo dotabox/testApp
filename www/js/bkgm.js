@@ -132,7 +132,7 @@ var BKGM = BKGM||{};
             this.canvas.setAttribute("id", "game");
             this.canvas.width  = window.innerWidth;
             this.canvas.height = window.innerHeight;
-            document.appendChild(this.canvas);
+            document.body.appendChild(this.canvas);
         }       
         this.width=this.canvas.width;
         this.height=this.canvas.height;
