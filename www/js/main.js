@@ -164,7 +164,7 @@
 				        Game.speed = 3 * Game.SCALE;
 				        Game.highscore = Game.GameScore.getScore();
 				        Game.startTime=Game.time;
-				        Game.countdown=5000;
+				        Game.countdown=30000;
 				        Game.score = 0;
 				        Game.font='SourceSansPro';
 				        Game.gameover=false;

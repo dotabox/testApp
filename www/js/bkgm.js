@@ -188,7 +188,7 @@ var BKGM = BKGM||{};
             return _this;
         },
         run:function(){
-            if(BKGM.debug)document.body.appendChild(debug);
+            if(BKGM.debug && debug)document.body.appendChild(debug);
             this.WIDTH = this.canvas.width;
             this.HEIGHT  = this.canvas.height;
             this.SCALEX = this.WIDTH/window.innerWidth;
