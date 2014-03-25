@@ -132,7 +132,7 @@ var BKGM = BKGM||{};
             this.canvas.setAttribute("id", "game");
             this.canvas.width  = window.innerWidth;
             this.canvas.height = window.innerHeight;
-            // document.body.appendChild(this.canvas);
+            document.body.appendChild(this.canvas);
         }       
         this.width=this.canvas.width;
         this.height=this.canvas.height;
@@ -188,8 +188,8 @@ var BKGM = BKGM||{};
             return _this;
         },
         run:function(){
-            // if(BKGM.debug && debug)
-            //     document.body.appendChild(debug);
+            if(BKGM.debug && debug)
+                document.body.appendChild(debug);
             this.WIDTH = this.canvas.width;
             this.HEIGHT  = this.canvas.height;
             this.SCALEX = this.WIDTH/window.innerWidth;
@@ -786,7 +786,7 @@ var BKGM = BKGM||{};
         script.onload = callback;
 
         // Fire the loading
-        // head.appendChild(script);
+        head.appendChild(script);
     };
     window.extend = function (subc, superc) {
         var subcp = subc.prototype;
