@@ -28,7 +28,7 @@
 					   .load("image","dota_3","img/DOTA/DOTA_3.png")
 					   .load("audio","slap","audio/slap.mp3");
 				preload.onloadAll= function(){
-					//windowLoad(preload);  
+					windowLoad(preload);  
 				}
             }
 	// window.onload=function(){
@@ -72,27 +72,27 @@
 				    	"background",
 				    	"lolvsdota"				    	
 				    ]);
-				    director.state("ready", [
-				    	"setcount",
-				    	"background",				    	
-				    	"count"
-				    	// "charactor.draw"
-				    ]);
-				    director.state("run", [
-				    	"setup",
-				    	"background",
-				    	"countdown",
-				    	"point",
-				    	"charactor.update",				    	
-				    	"heroes",
-				    	"charactor.draw"
-				    ]);
-				    director.state("gameover", [
-				    	"calscore",
-				    	"background",		    	
-				    	"scoreBoard",
-				    	"try_postscore"
-				    ]);
+				    // director.state("ready", [
+				    // 	"setcount",
+				    // 	"background",				    	
+				    // 	"count"
+				    // 	// "charactor.draw"
+				    // ]);
+				    // director.state("run", [
+				    // 	"setup",
+				    // 	"background",
+				    // 	"countdown",
+				    // 	"point",
+				    // 	"charactor.update",				    	
+				    // 	"heroes",
+				    // 	"charactor.draw"
+				    // ]);
+				    // director.state("gameover", [
+				    // 	"calscore",
+				    // 	"background",		    	
+				    // 	"scoreBoard",
+				    // 	"try_postscore"
+				    // ]);
 
 				    var menudota={
 				    	x:150,
