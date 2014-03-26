@@ -23,9 +23,10 @@
 		w:64,
 		h:108
 	}
-	BKGM.Charactor=function(type,images){
+	BKGM.Charactor=function(type,images,audios){
 		this.type=type;
 		this.images=images;
+		this.audios=audios;
 		this.currentImage=this.type=="lol"?images.blit:images.pudge;
 		this.game0=type=="lol"?blit0:pudge0;
 		this.game1=type=="lol"?blit1:pudge1;
@@ -39,12 +40,13 @@
 	BKGM.Charactor.prototype={
 		dotapoint:0,
 		lolpoint:0,
+		kill:0,
 		setTarget:function(e){
 			if(this.hook.status=="default"){
 				this.point={x:e.x,y:e.y};
 				if(e.x>this.x)this.speed=3;
 				else this.speed=-3;
-
+				this.audios.move.forceplay();
 			}
 			
 		},
@@ -56,7 +58,8 @@
 				this.currentImage=this.images.main;
 				this.w=this.game1.w;
 				this.h=this.game1.h;
-			}			
+			}
+			this.audios.shoot.forceplay();	
 		},
 		rewinded:function(){
 			this.currentImage=this.type=="lol"?this.images.blit:this.images.pudge;
@@ -66,9 +69,42 @@
 			this.arm.visible=false;
 			if(this.hook.enemy){
 				if(this.hook.enemy.type=="dota") this.dotapoint++; 
-					else this.lolpoint++; 
-	    		this.hook.enemy.Get();								
+					else this.lolpoint++;
+				if(this.type=="lol"){
+					if(this.hook.enemy.type=="dota")
+						this.kill++;
+					else this.kill=0;
+					switch (this.kill){
+						case 0: break;
+						case 1: break;
+						case 2:this.audios.k2.forceplay();break;
+						case 3:this.audios.k3.forceplay();break;
+						case 4:this.audios.k4.forceplay();break;
+						default:this.audios.k5.forceplay();break;
+					}
+				} else 
+				if(this.type=="dota"){
+					if(this.hook.enemy.type=="lol")
+						this.kill++;
+					else this.kill=0;
+					switch (this.kill){
+						case 0: break;
+						case 1: break;
+						case 2:this.audios.k2.forceplay();break;
+						case 3:this.audios.k3.forceplay();break;
+						case 4:this.audios.k4.forceplay();break;
+						default:this.audios.k5.forceplay();break;
+					}
+				}
+	    		this.hook.enemy.Get();
+	    		if(!this.fblood){
+	    			this.fblood=true;
+	    			this.audios.fb.forceplay();
+	    		}							
 	    	}
+		},
+		missed:function(){
+			this.audios.miss.forceplay();
 		},
 		update:function(){
 			if(this.point){
@@ -198,7 +234,7 @@
 					if (d>600) {
 		                this.status="rewind";
 		                this.firt=false;
-		                if(this.missed) this.missed();
+		                if(this.charactor.missed) this.charactor.missed();
 		            }
 		            this.box.position=new BKGM.Vector(this.x,this.y);
 					// this.box.updateCorners();

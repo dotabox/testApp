@@ -8,8 +8,8 @@
             // device APIs are available
             //
             function bodyload(){
-            	// onDeviceReady()
-            	document.addEventListener("deviceready", onDeviceReady, false);
+            	onDeviceReady()
+            	// document.addEventListener("deviceready", onDeviceReady, false);
 
             }
             function onDeviceReady() { 
@@ -26,7 +26,20 @@
 					   .load("image","dota_hand","img/DOTA/DOTA_2.png")
 					   .load("image","dota_main","img/DOTA/DOTA_1.png")
 					   .load("image","dota_3","img/DOTA/DOTA_3.png")
-					   .load("audio","slap","audio/slap.mp3");
+					   .load("audio","k5","audio/dota/announcer_kill_rampage_01.mp3")
+					   .load("audio","k4","audio/dota/announcer_kill_ultra_01.mp3")
+					   .load("audio","k3","audio/dota/announcer_kill_triple_01.mp3")
+					   .load("audio","k2","audio/dota/announcer_kill_double_01.mp3")
+					   .load("audio","win","audio/dota/pud_win_05.mp3")
+					   .load("audio","spawn","audio/dota/pud_spawn_11.mp3")
+					   .load("audio","move","audio/dota/pud_move_03.mp3")
+					   .load("audio","lose","audio/dota/pud_lose_08.mp3")
+					   .load("audio","kill","audio/dota/pud_kill_10.mp3")
+					   .load("audio","begin","audio/dota/announcer_battle_begin_01.mp3")
+					   .load("audio","miss","audio/dota/pud_ability_hook_miss_09.mp3")
+					   .load("audio","hook","audio/dota/pud_ability_hook_04.mp3")
+					   .load("audio","welcome","audio/dota/announcer_welcome_01.mp3")
+					   .load("audio","fb","audio/dota/announcer_1stblood_01.mp3");
 				preload.onloadAll= function(){
 					windowLoad(preload);  
 				}
@@ -35,10 +48,18 @@
         function windowLoad(preload) {
             var canvas = document.createElement('canvas');
             canvas.setAttribute("id", "game"); 
-            canvas.width  = 800;
-            canvas.height = 600;
+            // canvas.style.width  = '100%';
+            // canvas.style.height ='100%';
+            
             var ctx = canvas.getContext("2d");
             document.body.appendChild(canvas);
+            // var div= document.createElement('div');
+            // div.style.width='100%';
+            // div.style.height='100%';
+            // document.body.appendChild(div);
+            // div.appendChild(canvas);
+            canvas.width=800;
+            canvas.height=600;
 
             var director;
             var _fb;
@@ -123,18 +144,46 @@
 				        Game.text("DOTA POINT: "+charactor.dotapoint,20,20,20);
 				        Game.text("LOL POINT: "+charactor.lolpoint,Game.WIDTH-150,20,20);
 				    },true);
+				    var pudgesound={
+				    	fb:Game.resource.audios["fb"],
+				    	k2:Game.resource.audios["k2"],
+				    	k3:Game.resource.audios["k3"],
+				    	k4:Game.resource.audios["k4"],
+				    	k5:Game.resource.audios["k5"],
+				    	shoot:Game.resource.audios["hook"],
+				    	miss:Game.resource.audios["miss"],
+				    	kill:Game.resource.audios["kill"],
+				    	win:Game.resource.audios["win"],
+				    	lose:Game.resource.audios["lose"],
+				    	begin:Game.resource.audios["begin"],
+				    	spawn:Game.resource.audios["spawn"],
+				    	welcome:Game.resource.audios["welcome"],
+				    	move:Game.resource.audios["move"]
+				    }
+				    var pudgeimages={
+				    	pudge:Game.resource.images["dota_pudge"],
+				    	hand:Game.resource.images["dota_hand"],
+				    	main:Game.resource.images["dota_main"],
+				    	arm:Game.resource.images["dota_3"]
+				    }
+				    var blitimages={
+				    	blit:Game.resource.images["lol_blit"],
+				    	hand:Game.resource.images["lol_hand"],
+				    	main:Game.resource.images["lol_main"],
+				    	arm:Game.resource.images["lol_3"]
+				    }
 				    var charactor;
 				    var _down=function(e){
 				    	switch (director.current){
 				    		case 'menu': 
 				    			if(BKGM.checkMouseBox(e,menulol)) {
-				    				charactor=new BKGM.Charactor('lol',{blit:Game.resource.images["lol_blit"],hand:Game.resource.images["lol_hand"],main:Game.resource.images["lol_main"],arm:Game.resource.images["lol_3"]});
+				    				charactor=new BKGM.Charactor('lol',blitimages,pudgesound);
 				    				charactor.x=Game.WIDTH/2;
 				    				initHero();
 				    				director.switch("ready"); 
 				    			} else
 				    			if(BKGM.checkMouseBox(e,menudota)) {
-				    				charactor=new BKGM.Charactor('dota',{pudge:Game.resource.images["dota_pudge"],hand:Game.resource.images["dota_hand"],main:Game.resource.images["dota_main"],arm:Game.resource.images["dota_3"]});
+				    				charactor=new BKGM.Charactor('dota',pudgeimages,pudgesound);
 				    				charactor.x=Game.WIDTH/2;
 				    				initHero();
 				    				director.switch("ready"); 
@@ -164,16 +213,20 @@
 				        Game.speed = 3 * Game.SCALE;
 				        Game.highscore = Game.GameScore.getScore();
 				        Game.startTime=Game.time;
-				        Game.countdown=3000;
+				        Game.countdown=30000;
 				        Game.score = 0;
 				        Game.font='SourceSansPro';
 				        Game.gameover=false;
 				        heroes=[];
-
+				        charactor.audios.spawn.forceplay();
 				        //Game.highscore = readLocalData("highscore", 0);
 				    });
 
 				    director.taskOnce("setcount",function(){
+				    	charactor.audios.welcome.forceplay();
+				    	charactor.audios.welcome.ended=function(){
+				    		charactor.audios.begin.forceplay();
+				    	}
 				   		Game._count=4000;
 				    })
 				    director.task("count",function(){

@@ -195,9 +195,10 @@ var BKGM = BKGM||{};
             if(BKGM._isCordova){
                 this.SCALEX = this.WIDTH/window.innerWidth;
                 this.SCALEY = this.HEIGHT/window.innerHeight;
-            }else{
-                this.SCALEX = this.WIDTH/window.innerWidth;
-                this.SCALEY = this.HEIGHT/document.body.scrollHeight;                
+            }
+            else{
+                this.SCALEX = this.WIDTH/this.canvas.offsetWidth;
+                this.SCALEY = this.HEIGHT/this.canvas.offsetHeight;                
             }
             
             console.log(this.SCALEX,this.SCALEY);
