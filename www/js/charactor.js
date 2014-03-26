@@ -104,6 +104,8 @@
 	    	}
 		},
 		missed:function(){
+			this.kill=0;
+			this.hook.enemy=null;
 			this.audios.miss.forceplay();
 		},
 		update:function(){
@@ -374,8 +376,10 @@
 			var angle = Math.atan2(dy, dx);
 			this.rotation = angle;
 			if(this.box) this.box.rotate(angle);
-			var speedX=2*Math.cos(angle);
-			var speedY=2*Math.sin(angle);
+			var speed=2;
+			if(this._class=='sky') speed=4;
+			var speedX=speed*Math.cos(angle);
+			var speedY=speed*Math.sin(angle);
 			this.speedXY={spx:speedX,spy:speedY};
 		},
 		update:function(){

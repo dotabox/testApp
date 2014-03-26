@@ -69,8 +69,11 @@
 			// }else {
 				ctx.save();
 				ctx.translate(this.x,this.y);
-				this.rotation ? ctx.rotate(this.rotation):null;
-				this.sprite ? this.sprite.draw(game) : this.draw(game);	
+				
+				
+				
+				var rotation=this.rotation;
+				this.sprite ? this.sprite.draw(game,this.rotation) : this.draw(game);	
 				if(BKGM.debug){
 					ctx.rect(-this.width/2,-this.height/2,this.width,this.height);
 					ctx.strokeStyle = this._strokeStyle;
@@ -113,6 +116,7 @@
 		},
 		draw:function(game){
 			var ctx=game.ctx;
+			this.rotation ? ctx.rotate(this.rotation):null;
 			ctx.beginPath();
 			ctx.rect(-this.width/2,-this.height/2,this.width,this.height);
 			ctx.fillStyle=this._fillStyle;
@@ -292,7 +296,7 @@
             var self = this;
             this.state = {x:index%self.columns,y:index/self.rows>>0};
         },        
-        draw:function(Game){
+        draw:function(Game,rotation){
             var now=new Date();
             var dt = now - this.lastTime;
             if (dt > this.currentAnimation.time){
@@ -313,7 +317,14 @@
                 }
                
             }
+            Game.ctx.save();
+            if((rotation<Math.PI&&rotation>Math.PI/2)||(rotation<-Math.PI/2&&rotation>-Math.PI)){
+					Game.ctx.translate(this.height, 0);
+					Game.ctx.scale(1, -1);
+				}
+			rotation ? Game.ctx.rotate(rotation):null;
             Game.ctx.drawImage(this.image,this.posX,this.posY,this.width,this.height,-this.width/2,-this.height/2,this.width,this.height)
+            Game.ctx.restore();
         }
     };
 })();
