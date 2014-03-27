@@ -112,7 +112,12 @@ BKGM.Sound.prototype={
 		this.panner.connect(this.volume);
 		this.volume.connect(audioContext.destination);
 		self.sound=sound;
-		sound.noteOn(0);			
+		if (sound.start){
+			sound.start();
+		} else{
+			sound.noteOn(0);
+		}		
+					
 		sound.onended=function(){
 			if(self.ended) self.ended();
 		};	
