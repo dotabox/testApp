@@ -8,59 +8,68 @@
             // device APIs are available
             //
             function bodyload(){
-            	// onDeviceReady()
-            	document.addEventListener("deviceready", onDeviceReady, false);
+            	onDeviceReady()
+            	// document.addEventListener("deviceready", onDeviceReady, false);
 
             }
             function onDeviceReady() { 
 
             	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
+            	var isload=false;
+            	BKGM.audioDetect(function(mime){
+            		if(isload||!mime) return;
+            		isload=true;
+            		var preload= new BKGM.preload(); 
+            		preload.mime=mime;
+
+					preload
+						   .load("image","lol_blit","img/LOL/LOL_Blit.png")
+						   .load("image","lol_hand","img/LOL/LOL_2.png")
+						   .load("image","lol_main","img/LOL/LOL_1.png")
+						   .load("image","lol_3","img/LOL/LOL_3.png")
+						   .load("image","dota_pudge","img/DOTA/DOTA_Pudge.png")
+						   .load("image","dota_hand","img/DOTA/DOTA_2.png")
+						   .load("image","dota_main","img/DOTA/DOTA_1.png")
+						   .load("image","dota_3","img/DOTA/DOTA_3.png")
+						   .load("image","LOL_Renekton","img/LOL/LOL_Renekton.png")
+						   .load("image","DOTA_Jakiro","img/DOTA/DOTA_Jakiro.png")
+						   .load("image","DOTA_Tide","img/DOTA/DOTA_Tide.png")
+						   .load("image","LOL_Teemo","img/LOL/LOL_teemo.png")
+						   .load("image","bg","img/bg.png")
+						   .load("soundBase64","k5_dota","announcer_kill_rampage_01")
+						   .load("soundBase64","k4_dota","announcer_kill_ultra_01")
+						   .load("soundBase64","k3_dota","announcer_kill_triple_01")
+						   .load("soundBase64","k2_dota","announcer_kill_double_01")
+						   .load("soundBase64","win_dota","pud_win_05")
+						   .load("soundBase64","spawn_dota","pud_spawn_11")
+						   .load("soundBase64","move_dota","pud_move_03")
+						   .load("soundBase64","lose_dota","pud_lose_08")
+						   .load("soundBase64","kill_dota","pud_kill_10")
+						   .load("soundBase64","begin_dota","announcer_battle_begin_01")
+						   .load("soundBase64","miss_dota","pud_ability_hook_miss_09")
+						   .load("soundBase64","hook_dota","pud_ability_hook_04")
+						   .load("soundBase64","welcome_dota","announcer_welcome_01")
+						   .load("soundBase64","fb_dota","announcer_1stblood_01")
+						   .load("soundBase64","k5_lol","pentakill")
+						   .load("soundBase64","k4_lol","quartrakill")
+						   .load("soundBase64","k3_lol","tripplekill")
+						   .load("soundBase64","k2_lol","doublekill")
+						   .load("soundBase64","win_lol","laught")
+						   .load("soundBase64","spawn_lol","Blitzcrank_Select")
+						   .load("soundBase64","move_lol","Blitzcrank")
+						   .load("soundBase64","lose_lol","lose")
+						   // .load("soundBase64","kill_lol","pud_kill_10")
+						   .load("soundBase64","begin_lol","announcer_battle_begin_01")
+						   .load("soundBase64","miss_lol","miss")
+						   .load("soundBase64","hook_lol","shoot")
+						   .load("soundBase64","welcome_lol","welcome")
+						   .load("soundBase64","fb_lol","fb")
+						   ;
+					preload.onloadAll= function(){
+						windowLoad(preload);  
+					}
+            	})
             	
-            	var preload= new BKGM.preload();           	
-				preload.load("image","chim","img/chuotngu.png")
-					   .load("image","lol_blit","img/LOL/LOL_Blit.png")
-					   .load("image","lol_hand","img/LOL/LOL_2.png")
-					   .load("image","lol_main","img/LOL/LOL_1.png")
-					   .load("image","lol_3","img/LOL/LOL_3.png")
-					   .load("image","dota_pudge","img/DOTA/DOTA_Pudge.png")
-					   .load("image","dota_hand","img/DOTA/DOTA_2.png")
-					   .load("image","dota_main","img/DOTA/DOTA_1.png")
-					   .load("image","dota_3","img/DOTA/DOTA_3.png")
-					   .load("image","LOL_Renekton","img/LOL/LOL_Renekton.png")
-					   .load("image","DOTA_Jakiro","img/DOTA/DOTA_Jakiro.png")
-					   .load("image","bg","img/bg.png")
-					   .load("audio","k5_dota","audio/Dota/announcer_kill_rampage_01.mp3")
-					   .load("audio","k4_dota","audio/Dota/announcer_kill_ultra_01.mp3")
-					   .load("audio","k3_dota","audio/Dota/announcer_kill_triple_01.mp3")
-					   .load("audio","k2_dota","audio/Dota/announcer_kill_double_01.mp3")
-					   .load("audio","win_dota","audio/Dota/pud_win_05.mp3")
-					   .load("audio","spawn_dota","audio/Dota/pud_spawn_11.mp3")
-					   .load("audio","move_dota","audio/Dota/pud_move_03.mp3")
-					   .load("audio","lose_dota","audio/Dota/pud_lose_08.mp3")
-					   .load("audio","kill_dota","audio/Dota/pud_kill_10.mp3")
-					   .load("audio","begin_dota","audio/Dota/announcer_battle_begin_01.mp3")
-					   .load("audio","miss_dota","audio/Dota/pud_ability_hook_miss_09.mp3")
-					   .load("audio","hook_dota","audio/Dota/pud_ability_hook_04.mp3")
-					   .load("audio","welcome_dota","audio/Dota/announcer_welcome_01.mp3")
-					   .load("audio","fb_dota","audio/Dota/announcer_1stblood_01.mp3")
-					   .load("audio","k5_lol","audio/Lol/pentakill.mp3")
-					   .load("audio","k4_lol","audio/Lol/quartrakill.mp3")
-					   .load("audio","k3_lol","audio/Lol/tripplekill.mp3")
-					   .load("audio","k2_lol","audio/Lol/doublekill.mp3")
-					   .load("audio","win_lol","audio/Lol/laught.mp3")
-					   .load("audio","spawn_lol","audio/Lol/Blitzcrank_Select.mp3")
-					   .load("audio","move_lol","audio/Lol/Blitzcrank.mp3")
-					   .load("audio","lose_lol","audio/Lol/lose.mp3")
-					   // .load("audio","kill_lol","audio/Lol/pud_kill_10.mp3")
-					   .load("audio","begin_lol","audio/Dota/announcer_battle_begin_01.mp3")
-					   .load("audio","miss_lol","audio/Lol/miss.mp3")
-					   .load("audio","hook_lol","audio/Lol/shoot.mp3")
-					   .load("audio","welcome_lol","audio/Lol/welcome.mp3")
-					   .load("audio","fb_lol","audio/Lol/fb.mp3")
-					   ;
-				preload.onloadAll= function(){
-					windowLoad(preload);  
-				}
             }
 	// window.onload=function(){
         function windowLoad(preload) {
@@ -68,7 +77,6 @@
             canvas.setAttribute("id", "game"); 
             // canvas.style.width  = '100%';
             // canvas.style.height ='100%';
-            
             var ctx = canvas.getContext("2d");
             document.body.appendChild(canvas);
             // var div= document.createElement('div');
@@ -82,13 +90,12 @@
             var director;
             var _fb;
             
-            
             var Game = new BKGM({
 			    setup: function(){
 			        director = new BKGM.States();
 			        var Game = this;
 			        Game.addStates(director);
-			        BKGM.debug=1;
+			        // BKGM.debug=1;
 			        Game.addRes(preload);
 			        Game.GameScore=new BKGM.ScoreLocal("dotavslol");
 			       	_fb = new BKGM.FBConnect();
@@ -300,9 +307,9 @@
 				    var heroes=[];
 				    var _heroes=[
 				    {image:Game.resource.images["DOTA_Jakiro"],rows:1,columns:1,type:'dota',_class:'sky'},
-				    {image:Game.resource.images["DOTA_Jakiro"],rows:1,columns:1,type:'dota',_class:'sky'},
+				    {image:Game.resource.images["DOTA_Tide"],rows:1,columns:1,type:'dota',_class:'water'},
 				    {image:Game.resource.images["LOL_Renekton"],rows:1,columns:1,type:'lol',_class:'water'},
-				    {image:Game.resource.images["LOL_Renekton"],rows:1,columns:1,type:'lol',_class:'water'}
+				    {image:Game.resource.images["LOL_Teemo"],rows:1,columns:1,type:'lol',_class:'sky'}
 				    ]
 				    function initHero(){
 				    	for (var i = _heroes.length - 1; i >= 0; i--) {

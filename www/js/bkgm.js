@@ -884,8 +884,9 @@ var BKGM = BKGM||{};
         this.images={};
         this._maxElementLoad=0;
         this._elementLoaded=0;
+        var self=this;
     };
-    BKGM.preload.prototype.load=function(type,name,url,callback){
+    BKGM.preload.prototype.load=function(type,name,url,callback,mime){
             var self=this;
             this._maxElementLoad++;
             if (type==="image"){
@@ -903,6 +904,24 @@ var BKGM = BKGM||{};
                 audio.setAudio(url,function(){self._onload()});
                 self.audios[name]=audio;
                 if (callback) callback();
+            } else
+            if (type==="soundBase64"){
+                var mime=self.mime;
+                if(mime==="audio/ogg"){
+                    var sound = new BKGM.Sound(soundData[url+".ogg"]);
+                    self.audios[name]=sound;
+                    sound.onloaded=function(){
+                        self._onload();
+                    }
+                } else 
+                if(mime==="audio/mp3"){
+                    var sound = new BKGM.Sound(soundData[url+".mp3"]);
+                    self.audios[name]=sound;
+                    sound.onloaded=function(){
+                        self._onload();
+                    }
+                }                  
+                
             }
             return this;
         }
