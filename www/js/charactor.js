@@ -68,8 +68,13 @@
 			this.hook.visible=false;
 			this.arm.visible=false;
 			if(this.hook.enemy){
-				if(this.hook.enemy.type=="dota") this.dotapoint++; 
-					else this.lolpoint++;
+				if(this.hook.enemy.type=="dota") {
+					this.dotapoint++;
+					if(this.hook.enemy._class=="water") this.dotapoint++;
+				} else {
+					this.lolpoint++;
+					if(this.hook.enemy._class=="water") this.lolpoint++;
+				}
 				if(this.type=="lol"){
 					if(this.hook.enemy.type=="dota")
 						this.kill++;
@@ -106,6 +111,11 @@
 		missed:function(){
 			this.kill=0;
 			this.hook.enemy=null;
+			if(this.type=="dota") {
+				this.dotapoint++;
+			} else {
+				this.lolpoint++;
+			}
 			this.audios.miss.forceplay();
 		},
 		update:function(){
@@ -363,6 +373,9 @@
 		var target=new genTarget(this._class);
 			this.x=target.x;
 			this.y=target.y;
+		var speed=1.5;
+		if(this._class=='sky') speed=3;
+		this.speed=speed;
 		// this.actor=new BKGM.Actor();
 		
 		return this;
@@ -376,10 +389,9 @@
 			var angle = Math.atan2(dy, dx);
 			this.rotation = angle;
 			if(this.box) this.box.rotate(angle);
-			var speed=2;
-			if(this._class=='sky') speed=4;
-			var speedX=speed*Math.cos(angle);
-			var speedY=speed*Math.sin(angle);
+			
+			var speedX=this.speed*Math.cos(angle);
+			var speedY=this.speed*Math.sin(angle);
 			this.speedXY={spx:speedX,spy:speedY};
 		},
 		update:function(){
@@ -413,54 +425,5 @@
 		}
 	}
 	extend(BKGM.Enemy, BKGM.Actor);
-	// BKGM.Enemy.prototype=new BKGM.Actor();
-
- //    // BKGM.Enemy.prototype.constructor=BKGM.Actor.prototype;
-	
-
-	// BKGM.Enemy.prototype.setTarget=function(){
-	// 		var target=new genTarget(this._class);
-	// 		this.target=target;
-	// 		var dx=target.x-this.x;
-	// 		var dy=target.y-this.y;
-	// 		var angle = Math.atan2(dy, dx);
-	// 		this.rotation = angle;
-	// 		if(this.box) this.box.rotate(angle);
-	// 		var speedX=2*Math.cos(angle);
-	// 		var speedY=2*Math.sin(angle);
-	// 		this.speedXY={spx:speedX,spy:speedY};
-	// 	}
-	// BKGM.Enemy.prototype.update=function(){
-	// 		if(this.isget){
-	// 			this.x=this.hook.x;
-	// 			this.y=this.hook.y+this.hook.h/2;
-	// 		}else {
-	// 			this.x+=this.speedXY.spx;
-	// 			this.y+=this.speedXY.spy;
-	// 			if(this.target.x<this.x+5&&this.target.x>this.x-5&&this.target.y<this.y+5&&this.target.y>this.y-5){
-	// 				// if(this._behaviorend) this._behaviorend();
-	// 				this.setTarget()
-	// 			}
-	// 			if(this.box) {
-	// 				this.box.position=new BKGM.Vector(this.x,this.y);
-	// 				// this.box.updateCorners();
-	// 			}
-	// 		}
-			
-	// 	}
-	// 	BKGM.Enemy.prototype.hasbeenGet=function(hook){
-	// 		this.isget=true;
-	// 		this.hook=hook;
-	// 	}
-	// 	BKGM.Enemy.prototype.Get=function(){			
-	// 		this.isget=false;
-	// 		var target=new genTarget(this._class);
-	// 		this.x=target.x;
-	// 		this.y=target.y;
-	// 		this.setTarget();
-	// 	}
-	// BKGM.Enemy.prototype.checkCollide=function(enemy){
-	// 	if(th)
-	// }
 	
 })();
