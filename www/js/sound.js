@@ -61,7 +61,11 @@ BKGM.Sound =function(source, level) {
 	// self.buffer = null;
 	self.isLoaded = false;
 	self.panner = audioContext.createPanner();
-	self.volume = audioContext.createGainNode();
+	if(audioContext.createGain){
+		self.volume = audioContext.createGain();
+	} else{
+		self.volume = audioContext.createGainNode();
+	}
 	if (!level) {
 		self.volume.gain.value = 1;
 	}
