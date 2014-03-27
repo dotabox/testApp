@@ -718,6 +718,10 @@ var BKGM = BKGM||{};
                    self._onload();
                    if (callback && !self.call) {callback();self.call=1;}
                 }, false);
+                this.audio.addEventListener("error", function(e) {
+                    self._onload(e.currentTarget.error);
+                   if (callback && !self.call) {callback();self.call=1;}
+                });
             }
             return this;
         },
@@ -743,7 +747,9 @@ var BKGM = BKGM||{};
 
                 
             } else {
+
                  this.stop();
+                 this.audio.load();
                  this.play();
             }
             

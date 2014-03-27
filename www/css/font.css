@@ -1,10 +1,11 @@
 @font-face {
-    font-family: "SourceSansPro";
-    src: url("../fonts/SourceSansPro-Light.ttf") format("opentype");   
+    font-family: "kirbyss";
+    src: url("../fonts/kirbyss.ttf") format("opentype");   
         /* Make sure you defined the correct path, which is related to
             the location of your file `my_css.css` */ 
     }
+
     body {
-        font-family: "SourceSansPro";
+        font-family: "kirbyss";
         font-size:30px;
     }

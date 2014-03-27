@@ -8,8 +8,8 @@
             // device APIs are available
             //
             function bodyload(){
-            	onDeviceReady()
-            	// document.addEventListener("deviceready", onDeviceReady, false);
+            	// onDeviceReady()
+            	document.addEventListener("deviceready", onDeviceReady, false);
 
             }
             function onDeviceReady() { 
@@ -88,7 +88,7 @@
 			        director = new BKGM.States();
 			        var Game = this;
 			        Game.addStates(director);
-			        // BKGM.debug=1;
+			        BKGM.debug=1;
 			        Game.addRes(preload);
 			        Game.GameScore=new BKGM.ScoreLocal("dotavslol");
 			       	_fb = new BKGM.FBConnect();
@@ -158,7 +158,7 @@
 				    },true);
 				    director.task("point", function(){
 				        // Game.drop.updateTail()
-				        Game.fill(255,255,255,1);
+				        Game.fill(16,16,16,1);
 				        Game.text("DOTA POINT: "+charactor.dotapoint,20,20,20);
 				        Game.text("LOL POINT: "+charactor.lolpoint,Game.WIDTH-150,20,20);
 				    },true);
@@ -249,7 +249,7 @@
 				        Game.startTime=Game.time;
 				        Game.countdown=30000;
 				        Game.score = 0;
-				        Game.font='SourceSansPro';
+				        Game.font='kirbyss';
 				        Game.gameover=false;
 				        heroes=[];
 				        charactor.audios.spawn.forceplay();
@@ -292,7 +292,7 @@
 				    	}
 				    });
 				    director.task("countdown", function(){
-				    	Game.fill(255,255,255,1);
+				    	Game.fill(16,16,16,1);
 				    	var text="Time: "+(Game.countdown/1000>>0) +" s";
 				        Game.text(text, Game.WIDTH/2-50, 20, 20);
 				    }, true);
@@ -373,15 +373,15 @@
 				    },true);
 
 				    var TryButton={
-				    	x:Game.WIDTH/2-150,
+				    	x:Game.WIDTH/2-230,
 				    	y:Game.HEIGHT/2+120,
-				    	w:120,
+				    	w:200,
 				    	h:60
 				    }
 				    var ScoreButton={
 				    	x:Game.WIDTH/2+50,
 				    	y:Game.HEIGHT/2+120,
-				    	w:120,
+				    	w:200,
 				    	h:60
 				    }
 				    director.task("try_postscore", function(){

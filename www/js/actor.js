@@ -319,7 +319,6 @@
             }
             Game.ctx.save();
             if((rotation<Math.PI&&rotation>Math.PI/2)||(rotation<-Math.PI/2&&rotation>-Math.PI)){
-					Game.ctx.translate(this.height, 0);
 					Game.ctx.scale(1, -1);
 				}
 			rotation ? Game.ctx.rotate(rotation):null;
