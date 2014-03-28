@@ -90,8 +90,8 @@
 
     function addScores(scores) {
         var leaderboards = document.getElementById("leaderboard");
-        var loadingDiv = document.getElementById("loadingDiv");
-        loadingDiv.style.display = "none";
+        // var loadingDiv = document.getElementById("loadingDiv");
+        // loadingDiv.style.display = "none";
 
         for (var i = 0; i< scores.length; ++i) {
             var score = scores[i];
@@ -100,11 +100,10 @@
                 newTR.setAttribute("class", "active");
             }
 
-            var str = '<td class="position">' + score.position + '</td>' +
-                    '<td class="avatar"><img src="' + score.imageURL + '"></td>'
+            var str = '<td class="position">' + (score.position+1) + '</td>' +
+                    '<td class="avatar"><img src="' + score.imageURL + '"/></td>'+
                     '<td class="name">' + score.userName + '</td>' +
                     '<td class="score">' + score.score + '</td>'
-
             newTR.innerHTML = str;
             leaderboards.appendChild(newTR); 
         }

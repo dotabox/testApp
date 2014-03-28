@@ -528,7 +528,7 @@ var BKGM = BKGM||{};
             
         }, false);
         _this.canvas.addEventListener('mousedown', function(event) {
-            if (this._istouch) return;
+            if (_this._istouch) return;
             var e=checkMousePos(event,_this);
             _this._ismouseDown=true;
             _this.currentTouch.state="START";
@@ -542,17 +542,20 @@ var BKGM = BKGM||{};
                     if(_this._mouseDown) _this._mouseDown(e);
         }, false);
         _this.canvas.addEventListener('mousemove', function(event) {
-            if (this._istouch) return;
+            if (_this._istouch) return;
             var e=checkMousePos(event,_this);
             if(_this._ismouseDown) _this.currentTouch.state="MOVING";
             if(this._ismouseDown){
                 if(_this.states && _this.states._mouseDrag) _this.states._mouseDrag(e); else
                     if(_this._mouseDrag) _this._mouseDrag(e);
+            } else {
+                if(_this.states && _this.states._mouseMove) _this.states._mouseMove(e); else
+                    if(_this._mouseMove) _this._mouseMove(e);
             }
             
         }, false);
         _this.canvas.addEventListener('mouseup', function(event) {
-            if (this._istouch) return;
+            if (_this._istouch) return;
             var e=checkMousePos(event,_this);
             _this._ismouseDown=false;
             _this.currentTouch.state="ENDED";

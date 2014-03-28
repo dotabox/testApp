@@ -36,6 +36,9 @@
 						   .load("image","DOTA_Tide","img/DOTA/DOTA_Tide.png")
 						   .load("image","LOL_Teemo","img/LOL/LOL_teemo.png")
 						   .load("image","bg","img/bg.png")
+						   .load("image","log","img/log.png")
+						   .load("image","log_DOTA","img/log_Dota.png")
+						   .load("image","log_LOL","img/log_LOL.png")
 						   .load("soundBase64","k5_dota","announcer_kill_rampage_01")
 						   .load("soundBase64","k4_dota","announcer_kill_ultra_01")
 						   .load("soundBase64","k3_dota","announcer_kill_triple_01")
@@ -101,7 +104,7 @@
 			       	_fb = new BKGM.FBConnect();
 			       	_fb.init({appId:"1405511006381605"});
 			       	_fb.initLeaderboards(Game);
-			       	_fb.login();
+			       	// _fb.login();
 			       	Game.GameScore = new BKGM.ScoreManager("dotavslol");
 			       	Game.GameScore.addChild(localscore);
 			       	Game.GameScore.addChild(_fb);
@@ -147,27 +150,32 @@
 				    ]);
 
 				    var menudota={
-				    	x:150,
-				    	y:100,
-				    	w:200,
-				    	h:450
+				    	x:0,
+				    	y:0,
+				    	w:300,
+				    	h:500
 				    }
 				    var menulol={
 				    	x:500,
 				    	y:100,
-				    	w:200,
-				    	h:450
+				    	w:300,
+				    	h:500
 				    }
+				    var log=0;
 				    director.task("lolvsdota", function(){
-				        // Game.drop.updateTail()
-				        Game.fill(222,222,222,1);
-				        Game.rect(menudota.x,menudota.y,menudota.w,menudota.h);
-				        Game.rect(menulol.x,menulol.y,menulol.w,menulol.h);
-				        Game.fill(50,50,50,1);
-				        var text1="DOTA";
-				        var text2="LOL";
-				        Game.text(text1,menudota.x+Game.ctx.measureText(text1).width,menudota.y+50,50);
-				        Game.text(text2,menulol.x+Game.ctx.measureText(text2).width+30,menulol.y+50,50);
+				    	switch (log){
+				    		default: Game.ctx.drawImage(Game.resource.images.log,0,0);break;
+				    		case 1: Game.ctx.drawImage(Game.resource.images.log_DOTA,0,0);break;
+				    		case 2: Game.ctx.drawImage(Game.resource.images.log_LOL,0,0);break;
+				    	}
+				        // Game.fill(222,222,222,1);
+				        // Game.rect(menudota.x,menudota.y,menudota.w,menudota.h);
+				        // Game.rect(menulol.x,menulol.y,menulol.w,menulol.h);
+				        // Game.fill(50,50,50,1);
+				        // var text1="DOTA";
+				        // var text2="LOL";
+				        // Game.text(text1,menudota.x+Game.ctx.measureText(text1).width,menudota.y+50,50);
+				        // Game.text(text2,menulol.x+Game.ctx.measureText(text2).width+30,menulol.y+50,50);
 				    },true);
 				    director.task("point", function(){
 				        // Game.drop.updateTail()
@@ -208,7 +216,6 @@
 				    	kill:Game.resource.audios["kill_lol"],
 				    	win:Game.resource.audios["win_lol"],
 				    	lose:Game.resource.audios["lose_lol"],
-				    	begin:Game.resource.audios["begin_lol"],
 				    	spawn:Game.resource.audios["spawn_lol"],
 				    	welcome:Game.resource.audios["welcome_lol"],
 				    	move:Game.resource.audios["move_lol"]
@@ -220,7 +227,20 @@
 				    	arm:Game.resource.images["lol_3"]
 				    }
 				    var charactor;
-				    var _down=function(e){
+				    var _down = function(e){
+				    	switch (director.current) {
+				    		case 'menu': 
+				    			if(BKGM.checkMouseBox(e,menulol)) {
+				    				log=2;
+				    			} else
+				    			if(BKGM.checkMouseBox(e,menudota)) {
+				    				log=1;
+				    			}
+				    			break;
+				    	}
+				    }
+				    
+				    var _up=function(e){
 				    	switch (director.current){
 				    		case 'menu': 
 				    			if(BKGM.checkMouseBox(e,menulol)) {
@@ -235,6 +255,7 @@
 				    				initHero();
 				    				director.switch("ready"); 
 				    			}
+				    			log=0;
 				    			break;
 				    		case 'run': 
 				    			if(e.y<200)
@@ -243,12 +264,23 @@
 				    			break;
 			    			case 'gameover':
 			    				if(BKGM.checkMouseBox(e,TryButton)) {
+			    					document.getElementById('bkgmshare').style.display="none";
 			    					director.switch("menu");
 			    				} else
 			    				if(BKGM.checkMouseBox(e,ScoreButton)) {
+			    					_fb.postCanvas();
+			    				} else 
+			    				if(BKGM.checkMouseBox(e,LeaderboardButton)) {
+			    					_fb.showLeaderboard();
 			    				}
 			    				break;
 				    	}
+				    }
+				    director.touchEnd=function(e){
+				    	_up(e);
+				    }
+				    director.mouseUp=function(e){
+				    	_up(e);
 				    }
 				    director.touchStart=function(e){
 				    	_down(e);
@@ -260,7 +292,7 @@
 				        Game.speed = 3 * Game.SCALE;
 				        Game.highscore = localscore.getScore().score;
 				        Game.startTime=Game.time;
-				        Game.countdown=30000;
+				        Game.countdown=3000;
 				        Game.score = 0;
 				        Game.font='kirbyss';
 				        Game.gameover=false;
@@ -272,7 +304,7 @@
 				    director.taskOnce("setcount",function(){
 				    	charactor.audios.welcome.forceplay();
 				    	charactor.audios.welcome.ended=function(){
-				    		charactor.audios.begin.forceplay();
+				    		if(charactor.audios.begin) charactor.audios.begin.forceplay();
 				    	}
 				   		Game._count=4000;
 				    })
@@ -366,7 +398,8 @@
 				        } else {
 				        	charactor.audios.win.forceplay();
 				        }
-				        _fb.showLeaderboard();
+				        // _fb.showLeaderboard();
+				        document.getElementById('bkgmshare').style.display="inherit";
 				        // console.log(Game._newtext);
 
 				    });
@@ -387,13 +420,19 @@
 				    },true);
 
 				    var TryButton={
-				    	x:Game.WIDTH/2-230,
+				    	x:Game.WIDTH/2-260,
 				    	y:Game.HEIGHT/2+120,
-				    	w:200,
+				    	w:160,
 				    	h:60
 				    }
 				    var ScoreButton={
-				    	x:Game.WIDTH/2+50,
+				    	x:Game.WIDTH/2+120,
+				    	y:Game.HEIGHT/2+120,
+				    	w:190,
+				    	h:60
+				    }
+				    var LeaderboardButton={
+				    	x:Game.WIDTH/2-90,
 				    	y:Game.HEIGHT/2+120,
 				    	w:200,
 				    	h:60
@@ -403,9 +442,11 @@
 				        Game.rectMode("DEFAULT");
 				        Game.rect(TryButton.x,TryButton.y,TryButton.w,TryButton.h);
 				        Game.rect(ScoreButton.x,ScoreButton.y,ScoreButton.w,ScoreButton.h);
+				        Game.rect(LeaderboardButton.x,LeaderboardButton.y,LeaderboardButton.w,LeaderboardButton.h);
 				        Game.fill(222,222,222,1);
 				        Game.text("Try again",TryButton.x+15,TryButton.y+TryButton.h/2-5,25);
 				        Game.text("Post score",ScoreButton.x+5,ScoreButton.y+ScoreButton.h/2-5,25);
+				        Game.text("Leaderboard",LeaderboardButton.x+5,LeaderboardButton.y+LeaderboardButton.h/2-5,25);
 				    },true);
 				    
 				    

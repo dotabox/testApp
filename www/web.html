@@ -17,10 +17,16 @@
 	    display: block;
 	   
 	}
+	#bkgmshare{
+		bottom: 20px;
+		left: 200px;
+		display: none;
+		position: fixed;
+	}
 </style>
 <head>
 	<meta charset="utf-8" />
-    <script src="http://connect.facebook.net/en_US/all.js"></script>
+    <script src="//connect.facebook.net/en_US/all.js"></script>
     <script type="text/javascript" charset="utf-8" src = "audio/sounddata.js"></script>
 	<script type="text/javascript" charset="utf-8" src = "audio/sounddata.Dota.js"></script>
 	<script type="text/javascript" charset="utf-8" src = "audio/sounddata.LOL.js"></script>
@@ -34,5 +40,18 @@
 </head>
 <body>
 	<div id="fb-root"></div>
+	<div id="bkgmshare">
+		<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+		<div class="g-plusone"></div>
+		<script type="text/javascript">
+		  (function() {
+		    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+		    po.src = 'https://apis.google.com/js/platform.js';
+		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+		  })();
+		</script>
+		<div class="fb-like" data-href="http://dotabox.github.io/testApp/www/" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
+	</div>
 </body>
 </html>

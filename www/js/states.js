@@ -73,6 +73,15 @@
             };
             if(this.touchStart) this.touchStart(e);
         },  
+        _touchEnd:function(e){
+            for (var i = this.childs.length - 1; i >= 0; i--) {
+                if(this.childs[i]._eventenable && BKGM.checkEventActor(e,this.childs[i])){
+                    if(this.childs[i].touchEnd) this.childs[i].touchEnd(e);
+                    return;
+                }
+            };
+            if(this.touchEnd) this.touchEnd(e);
+        },  
         _mouseDown:function(e){
             for (var i = this.childs.length - 1; i >= 0; i--) {
                 if(this.childs[i]._eventenable && BKGM.checkEventActor(e,this.childs[i])){
@@ -82,8 +91,14 @@
             };
             if(this.mouseDown) this.mouseDown(e);
         },
-        touchStart:function(e){
-
+        _mouseUp:function(e){
+            for (var i = this.childs.length - 1; i >= 0; i--) {
+                if(this.childs[i]._eventenable && BKGM.checkEventActor(e,this.childs[i])){
+                    if(this.childs[i].mouseUp) this.childs[i].mouseUp(e);
+                    return;
+                }
+            };
+            if(this.mouseUp) this.mouseUp(e);
         }
     }
 

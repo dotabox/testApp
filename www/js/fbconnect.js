@@ -109,11 +109,11 @@ window.Base64Binary = {
             var message = prompt('Facebook', 'Enter a message');
 
             if (message != null)
-            {
+            {   
                 var ajax = {
-                    success: obj.success ? obj.success : null,
-                    error: obj.error ? obj.error : null,
-                    complete: obj.complete ? obj.complete : null
+                    success: (obj && obj.success) ? obj.success : null,
+                    error: (obj && obj.error) ? obj.error : null,
+                    complete: (obj && obj.complete) ? obj.complete : null
                 }
                 // this is the mult
                 // let's encode ouripart/form-data boundary we'll use
@@ -172,10 +172,9 @@ window.Base64Binary = {
                 alert(e);
             }
             this.app_id=app_id;
-
-            // FB.Event.subscribe('auth.statusChange', self.handleStatusChange);
         },
-        initLeaderboards : function(Game,link,x,y,width,height){
+        initLeaderboards : function(Game,link,x,y,width,height,isClose){
+            var self=this;
             this.iframe=document.createElement('iframe');
             
             // this.iframe.style.backgroundcolor= "#fff";
@@ -187,6 +186,36 @@ window.Base64Binary = {
             this.iframe.style.display="none";
             this.iframe.style.top=(y||0)+"px";
             this.iframe.style.left=(x||0)+"px";
+            if(isClose) return;
+            this.closeButton=document.createElement('div');
+            document.body.appendChild(this.closeButton);
+            this.closeButton.style.display="none";
+            this.closeButton.style.position="fixed";
+            this.closeButton.style.width="50px";
+            this.closeButton.style.height="50px";
+            this.closeButton.style.top='0px';
+            this.closeButton.style.left=(Game.WIDTH-50)+'px';
+            this.closeButton.style.textAlign="center";
+            this.closeButton.style.lineHeight="50px";
+            this.closeButton.style.fontWeight="bold";
+            this.closeButton.style.fontSize="30px";
+            this.closeButton.style.textDecoration= "none";      
+            this.closeButton.style.cursor= "pointer";
+            this.closeButton.innerHTML="X";
+            this.closeButton.style.opacity= .8; 
+            this.closeButton.onmouseover=function(){
+                self.closeButton.style.opacity= 1;
+            }
+            this.closeButton.onmouseout=function(){
+                self.closeButton.style.opacity= 0.8;            
+            }
+            this.closeButton.onmousedown=function(){
+                self.closeButton.style.opacity= 0.8; 
+            }
+            this.closeButton.onmouseup=function(){
+                self.closeButton.style.opacity= 1;
+                if(self.hideLeaderboard) self.hideLeaderboard();
+            }
         },
         handleStatusChange:function(session) {
             if (session.authResponse) {
@@ -205,7 +234,7 @@ window.Base64Binary = {
         },            
         login:function(callback) {
             var self=this;
-            this.getLoginStatus(function(response) {
+            this.getLoginStatus(function(response) {                
                 if (!response) {
                     FB.login(
                     function(response) {
@@ -219,22 +248,7 @@ window.Base64Binary = {
                 );
                 }
             });
-            FB.Event.subscribe('auth.authResponseChange', function(res) {
-                if (res.status === 'connected') {
-                    if(callback) callback(res);
-                } else {
-                FB.login(
-                    function(response) {
-                        if (response.session) {
-                            if(callback) callback(response);
-                        } else {
-                            if(callback) callback(response);
-                        }
-                    },
-                    { scope: "publish_actions" }
-                );
-                }
-              });
+            
             
             
         },
@@ -306,6 +320,7 @@ window.Base64Binary = {
             
         },
         getScore: function(params,callback) {
+
             var apiCall = ((params && params.userID) ? params.userID : "me") + "/scores";
             FB.api(apiCall, function(response) {
                 if (response.error) {
@@ -313,9 +328,9 @@ window.Base64Binary = {
                     return new BKGM.Score("me",0);
                 }
                 else if (response.data && response.data.length > 0) {
-                    var toBKGMScore = toBKGMScore(response.data[0]);
-                    callback(toBKGMScore,null);
-                    return toBKGMScore;
+                    var score = toBKGMScore(response.data[0]);
+                    callback(score,null);
+                    return score;
                 }
                 else {
                     //No score has been submitted yet for the user
@@ -324,6 +339,10 @@ window.Base64Binary = {
                 }
 
             });
+        },
+        hideLeaderboard : function(){
+            this.iframe.style.display="none";
+            if(this.closeButton)this.closeButton.style.display="none";
         },
         showLeaderboard : function(callback, params) {
             // if (!this._leaderboardsTemplate)
@@ -335,33 +354,47 @@ window.Base64Binary = {
             //     if (!callbackSent && callback)
             //         callback(error);
             // });
-            var self = this;
-            FB.api(self.app_id + "/scores", function(response) {
-                // if (dialog.closed)
-                //     return;
-                if (response.error) {
-                    if (callback) {
-                        // callbackSent = true;
-                        callback(response.error);
-                        // dialog.close();
+            var self=this;
+            self.iframe.contentWindow.initializeView();
+            this.getAuthResponse(function(access_token,uid){
+                BKGM.ajax({
+                    url:"https://graph.facebook.com/"+self.app_id + "/scores/?access_token=" + access_token,
+                    type:'GET',
+                    complete:function(response) {
+                        // if (dialog.closed)
+                        //     return;
+                        response = JSON.parse(response);
+                        if (response.error) {
+                            if (callback) {
+                                // callbackSent = true;
+                                callback(response.error);
+                                // dialog.close();
+                            }
+                            return;
+                        }
+                        
+                        var scores = [];
+                        if (response.data && response.data.length) {
+
+                            for (var i = 0; i< response.data.length; ++i) {
+                                var score = toBKGMScore(response.data[i]);
+                                score.position = i;
+                                score.imageURL = "https://graph.facebook.com/" + score.userID + "/picture";
+
+                                // score.me = score.userID === me.fb._currentSession.authResponse.userID;
+                                scores.push(score);
+
+                        
+                            }
+                        }
+                        // var js = "addScores(" +  + ")";
+                        self.iframe.contentWindow.addScores(scores);
+                        self.iframe.style.display="inherit";
+                        if(self.closeButton)self.closeButton.style.display="inherit";
+                        // dialog.eval(js);
                     }
-                    return;
-                }
-                var scores = [];
-                if (response.data && response.data.length) {
-                    for (var i = 0; i< response.data.length; ++i) {
-                        var score = toBKGMScore(response.data[i]);
-                        score.position = i;
-                        score.imageURL = "https://graph.facebook.com/" + score.userID + "/picture";
-                        // score.me = score.userID === me.fb._currentSession.authResponse.userID;
-                        scores.push(score);
-                    }
-                }
-                var js = "addScores(" + JSON.stringify(scores) + ")";
-                self.iframe.contentWindow.eval(js);
-                self.iframe.style.display="inherit";
-                // dialog.eval(js);
-            });
+                })
+            });           
         }
     };
    
