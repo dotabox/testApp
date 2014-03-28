@@ -147,6 +147,14 @@ window.Base64Binary = {
             }
         }
     };
+    function toBKGMScore(fbResponse, requestScoreParams) {
+        var result = new BKGM.Score(fbResponse.user.id, fbResponse.score, fbResponse.user.name);
+        if (requestScoreParams) {
+            result.leaderboardID = requestScoreParams.leaderboardID;
+        }
+        result.imageURL = 'https://graph.facebook.com/' + fbResponse.user.id + '/picture';
+        return result;
+    };
     BKGM.FBConnect = function(){        
         // return this;
     }
@@ -182,16 +190,24 @@ window.Base64Binary = {
         },            
         login:function(callback) {
             var self=this;
-            FB.login(
-                function(response) {
-                    if (response.session) {
-                        if(callback) callback(response);
-                    } else {
-                        if(callback) callback(response);
-                    }
-                },
-                { scope: "publish_actions" }
-            );
+            FB.Event.subscribe('auth.authResponseChange', function(res) {
+                if (res.status === 'connected') {
+                    if(callback) callback(res);
+                } else {
+                FB.login(
+                    function(response) {
+                        if (response.session) {
+                            if(callback) callback(response);
+                        } else {
+                            if(callback) callback(response);
+                        }
+                    },
+                    { scope: "publish_actions" }
+                );
+                }
+              });
+            
+            
         },
         getLoginStatus: function(callback) {
             var self=this;
@@ -237,7 +253,49 @@ window.Base64Binary = {
 
             
 
-        }
+        },
+        submitScore:function(score,params,callback){
+            this.requestScore(params,function(currentScore, error) {
+                if (error) {                    
+                    if (callback)
+                        callback(error);
+                   return;
+                }
+                var topScore = currentScore ? currentScore.score : 0;
+                if (score <= topScore) {
+                    //don't submit the new score because a better score is already submitted
+                    if (callback)
+                        callback(null);
+                    return;
+                }
+                var apiCall = "/" + ((params && params.userID) ? params.userID : "me") + "/scores";
+                FB.api(apiCall, 'POST', {score:score}, function (response) {
+                     if (callback)
+                        callback(response.error);
+                });
+            })
+            
+        },
+        getScore: function(params,callback) {
+            var apiCall = ((params && params.userID) ? params.userID : "me") + "/scores";
+            FB.api(apiCall, function(response) {
+                if (response.error) {
+                    callback(null, response.error);
+                    return new BKGM.Score("me",0);
+                }
+                else if (response.data && response.data.length > 0) {
+                    var toBKGMScore = fromFBScoreToCocoonScore(response.data[0]);
+                    callback(toBKGMScore,null);
+                    return toBKGMScore;
+                }
+                else {
+                    //No score has been submitted yet for the user
+                    callback(null,null);
+                    return new BKGM.Score("me",0);
+                }
+
+            });
+        },
     };
    
 })();

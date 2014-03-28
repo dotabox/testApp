@@ -937,25 +937,69 @@ var BKGM = BKGM||{};
     }
 })();
 (function(){
+    BKGM.Score = function(userID, score, userName, imageURL, leaderboardID){
+        this.userID = userID;
+        this.score = score || 0;
+        this.userName = userName;
+        this.imageURL = imageURL;
+        this.leaderboardID = leaderboardID;
+
+        return this;
+    }
+
+})();
+(function(){
+    BKGM.ScoreManager=function(name){
+        this.name=name||"test";
+        this.childrentList=[];
+    }
+    BKGM.ScoreManager.prototype={
+        addChild : function(child){
+            this.childrentList.push(child);
+        },
+        submitScore:function(score,callback){
+           for (var i = this.childrentList.length - 1; i >= 0; i--) {
+               this.childrentList[i].submitScore(score,callback);
+           };
+
+        },
+        getScore:function(params,callback){
+            var scores=[];
+            for (var i = this.childrentList.length - 1; i >= 0; i--) {
+                var score=this.childrentList[i].getScore(params,callback)
+                scores.push(score);
+            };
+            return scores;            
+        }       
+
+    }
+})();
+(function(){
 
     BKGM.ScoreLocal=function(name){
         this.name=name;
     }
     BKGM.ScoreLocal.prototype={
-        submitScore:function(score){
+        submitScore:function(score,userID){
             if(!localStorage) return 0;
-            var topScore=localStorage.getItem("BKGM."+name+".score");
-            if((topScore && score>topScore)||!topScore)
+            
+
+            var name = this.name;
+            var scoreItem = localStorage.getItem("BKGM."+name+".score");
+            var topScore = parseInt(scoreItem) || 0;
+            if(topScore && score>topScore)
                 localStorage.setItem("BKGM."+name+".score",score);
 
         },
         getScore:function(){
             if(localStorage){
-                var score=localStorage.getItem("BKGM."+name+".score");
-                if(!score) score=0;
-                return score;
+                var name = this.name;
+                var scoreItem = localStorage.getItem("BKGM."+name+".score");
+                var score = parseInt(scoreItem) || 0;
+
+                return new BKGM.Score("me", score);
             } else {
-                return 0;
+                return new BKGM.Score("me", 0);;
             }
             
         }

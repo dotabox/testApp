@@ -97,9 +97,13 @@
 			        Game.addStates(director);
 			        // BKGM.debug=1;
 			        Game.addRes(preload);
-			        Game.GameScore=new BKGM.ScoreLocal("dotavslol");
+			        var localscore=new BKGM.ScoreLocal("dotavslol");
 			       	_fb = new BKGM.FBConnect();
-			       	_fb.init({appId:"296632137153437"});
+			       	_fb.init({appId:"1405511006381605"});
+			       	Game.GameScore = new BKGM.ScoreManager("dotavslol");
+			       	Game.GameScore.addChild(localscore);
+			       	Game.GameScore.addChild(_fb);
+
 			       	// Game.touchStart=function(e){
 			       	// 		// _fb.postCanvas("Test post diem");
 			       	// 		// mb.setTarget(e.x,e.y);
@@ -252,7 +256,7 @@
 				    }
 				    director.taskOnce("setup", function(){
 				        Game.speed = 3 * Game.SCALE;
-				        Game.highscore = Game.GameScore.getScore();
+				        Game.highscore = localscore.getScore().score;
 				        Game.startTime=Game.time;
 				        Game.countdown=30000;
 				        Game.score = 0;
