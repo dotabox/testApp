@@ -49,8 +49,13 @@ BKGM.audioDetect = function(callback) {
 };
 
 })();
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
+var context
+if(window.AudioContext || window.webkitAudioContext)
+{
+	window.AudioContext = window.AudioContext || window.webkitAudioContext;
+	context = new AudioContext();
+}
+
 (function(){
 	
 

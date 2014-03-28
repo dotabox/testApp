@@ -937,20 +937,27 @@ var BKGM = BKGM||{};
     }
 })();
 (function(){
+
     BKGM.ScoreLocal=function(name){
         this.name=name;
     }
     BKGM.ScoreLocal.prototype={
         submitScore:function(score){
+            if(!localStorage) return 0;
             var topScore=localStorage.getItem("BKGM."+name+".score");
             if((topScore && score>topScore)||!topScore)
                 localStorage.setItem("BKGM."+name+".score",score);
 
         },
         getScore:function(){
-            var score=localStorage.getItem("BKGM."+name+".score");
-            if(!score) score=0;
-            return score;
+            if(localStorage){
+                var score=localStorage.getItem("BKGM."+name+".score");
+                if(!score) score=0;
+                return score;
+            } else {
+                return 0;
+            }
+            
         }
        
 
