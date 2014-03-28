@@ -190,6 +190,20 @@ window.Base64Binary = {
         },            
         login:function(callback) {
             var self=this;
+            this.getLoginStatus(function(response) {
+                if (!response) {
+                    FB.login(
+                    function(response) {
+                        if (response.session) {
+                            if(callback) callback(response);
+                        } else {
+                            if(callback) callback(response);
+                        }
+                    },
+                    { scope: "publish_actions" }
+                );
+                }
+            });
             FB.Event.subscribe('auth.authResponseChange', function(res) {
                 if (res.status === 'connected') {
                     if(callback) callback(res);
