@@ -13,7 +13,24 @@ window.requestAnimFrame = (function(){
 var BKGM = BKGM||{};
 
 (function(){
-    
+    // Khi ứng dụng ko hiện (ví dụ chuyển tab)
+    var changetabtime=0;
+
+    function handleVisibilityChange() {
+        if (document.hidden) {
+            if(window.performance.now)
+                changetabtime=window.performance.now();
+            else
+                changetabtime=new Date();
+        } else  {
+            if(window.performance.now)
+                changetabtime=window.performance.now()-changetabtime;
+            else
+                changetabtime=new Date()-changetabtime;
+        }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibilityChange, false);
 
     ((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
     var lastTime=0;
@@ -23,6 +40,7 @@ var BKGM = BKGM||{};
     var _statesLoop=[];
     var _count=[];
     
+    
     var debug=document.createElement("div");
     debug.style.position="absolute";
     debug.style.color="red";
@@ -30,10 +48,22 @@ var BKGM = BKGM||{};
         _statesLoop.push(_this);
     };
     var _loop = function(){
-        var time=new Date();
+        var time;
+        if(window.performance.now)
+            time =window.performance.now();
+        else
+            time=new Date();
         for (var i = _statesLoop.length - 1; i >= 0; i--) {
-            var now =new Date();
-            var dt =  now - lastTime;//Khoang thoi gian giua 2 lan cap nhat
+            if(window.performance.now)
+                var now =new Date();
+            else
+                time=new Date();
+            if(!changetabtime)
+                var dt =  now - lastTime;//Khoang thoi gian giua 2 lan cap nhat
+            else {
+                var dt =  now - lastTime - changetabtime;//Khoang thoi gian giua 2 lan cap nhat
+                changetabtime=0;
+            }                
             lastTime = now;
             t += dt ;//Thoi gian delay giua 2 lan cap nhat
             while (t >= frameTime) {//Chay chi khi thoi gian delay giua 2 lan lon hon 10ms
@@ -44,7 +74,10 @@ var BKGM = BKGM||{};
             }   
             _statesLoop[i].loop(_statesLoop[i]);
         };
-        var _drawtime=(new Date()- time);
+        if(window.performance.now)
+            var _drawtime=(window.performance.now()- time);
+        else
+            var _drawtime=(new Date()- time);
         var drawtime=0;
         _count.push(_drawtime);
         for (var i = _count.length - 1; i >= 0; i--) {

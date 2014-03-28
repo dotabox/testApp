@@ -171,7 +171,22 @@ window.Base64Binary = {
             } catch (e) {
                 alert(e);
             }
+            this.app_id=app_id;
+
             // FB.Event.subscribe('auth.statusChange', self.handleStatusChange);
+        },
+        initLeaderboards : function(Game,link,x,y,width,height){
+            this.iframe=document.createElement('iframe');
+            
+            // this.iframe.style.backgroundcolor= "#fff";
+            document.body.appendChild(this.iframe);
+            this.iframe.src=link||"leaderboards.html";
+            this.iframe.width=width||Game.WIDTH;
+            this.iframe.height=height|| Game.HEIGHT;
+            this.iframe.style.position="absolute";
+            this.iframe.style.display="none";
+            this.iframe.style.top=(y||0)+"px";
+            this.iframe.style.left=(x||0)+"px";
         },
         handleStatusChange:function(session) {
             if (session.authResponse) {
@@ -310,6 +325,44 @@ window.Base64Binary = {
 
             });
         },
+        showLeaderboard : function(callback, params) {
+            // if (!this._leaderboardsTemplate)
+            //     throw "Please, provide a html template for leaderboards with the setTemplates method";
+            // var dialog = new CocoonJS.App.WebDialog();
+            // var callbackSent = false;
+            // dialog.show(this._leaderboardsTemplate, function(error) {
+            //     dialog.closed = true;
+            //     if (!callbackSent && callback)
+            //         callback(error);
+            // });
+            var self = this;
+            FB.api(self.app_id + "/scores", function(response) {
+                // if (dialog.closed)
+                //     return;
+                if (response.error) {
+                    if (callback) {
+                        // callbackSent = true;
+                        callback(response.error);
+                        // dialog.close();
+                    }
+                    return;
+                }
+                var scores = [];
+                if (response.data && response.data.length) {
+                    for (var i = 0; i< response.data.length; ++i) {
+                        var score = toBKGMScore(response.data[i]);
+                        score.position = i;
+                        score.imageURL = "https://graph.facebook.com/" + score.userID + "/picture";
+                        // score.me = score.userID === me.fb._currentSession.authResponse.userID;
+                        scores.push(score);
+                    }
+                }
+                var js = "addScores(" + JSON.stringify(scores) + ")";
+                self.iframe.contentWindow.eval(js);
+                self.iframe.style.display="inherit";
+                // dialog.eval(js);
+            });
+        }
     };
    
 })();

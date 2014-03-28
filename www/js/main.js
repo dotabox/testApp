@@ -100,6 +100,7 @@
 			        var localscore=new BKGM.ScoreLocal("dotavslol");
 			       	_fb = new BKGM.FBConnect();
 			       	_fb.init({appId:"1405511006381605"});
+			       	_fb.initLeaderboards(Game);
 			       	_fb.login();
 			       	Game.GameScore = new BKGM.ScoreManager("dotavslol");
 			       	Game.GameScore.addChild(localscore);
@@ -365,6 +366,7 @@
 				        } else {
 				        	charactor.audios.win.forceplay();
 				        }
+				        _fb.showLeaderboard();
 				        // console.log(Game._newtext);
 
 				    });
