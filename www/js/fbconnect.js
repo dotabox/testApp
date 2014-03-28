@@ -313,7 +313,7 @@ window.Base64Binary = {
                     return new BKGM.Score("me",0);
                 }
                 else if (response.data && response.data.length > 0) {
-                    var toBKGMScore = fromFBScoreToCocoonScore(response.data[0]);
+                    var toBKGMScore = toBKGMScore(response.data[0]);
                     callback(toBKGMScore,null);
                     return toBKGMScore;
                 }
