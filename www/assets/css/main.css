@@ -89,6 +89,7 @@ td {
 
 .avatar img {
   border-radius: 45px;
+  vertical-align: middle;
 }
 
 .score {

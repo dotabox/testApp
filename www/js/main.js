@@ -103,7 +103,7 @@
 			        var localscore=new BKGM.ScoreLocal("dotavslol");
 			       	_fb = new BKGM.FBConnect();
 			       	_fb.init({appId:"1405511006381605"});
-			       	_fb.initLeaderboards(Game);
+			       	_fb.initLeaderboards(Game,null,0,0,window.innerWidth-10,window.innerHeight-10);
 			       	// _fb.login();
 			       	Game.GameScore = new BKGM.ScoreManager("dotavslol");
 			       	Game.GameScore.addChild(localscore);
@@ -162,11 +162,12 @@
 				    	h:500
 				    }
 				    var log=0;
+
 				    director.task("lolvsdota", function(){
 				    	switch (log){
-				    		default: Game.ctx.drawImage(Game.resource.images.log,0,0);break;
-				    		case 1: Game.ctx.drawImage(Game.resource.images.log_DOTA,0,0);break;
-				    		case 2: Game.ctx.drawImage(Game.resource.images.log_LOL,0,0);break;
+				    		default: Game.ctx.drawImage(Game.resource.images.log,0,0,Game.WIDTH,Game.HEIGHT);break;
+				    		case 1: Game.ctx.drawImage(Game.resource.images.log_DOTA,0,0,Game.WIDTH,Game.HEIGHT);break;
+				    		case 2: Game.ctx.drawImage(Game.resource.images.log_LOL,0,0,Game.WIDTH,Game.HEIGHT);break;
 				    	}
 				        // Game.fill(222,222,222,1);
 				        // Game.rect(menudota.x,menudota.y,menudota.w,menudota.h);
@@ -180,8 +181,8 @@
 				    director.task("point", function(){
 				        // Game.drop.updateTail()
 				        Game.fill(16,16,16,1);
-				        Game.text("DOTA POINT: "+charactor.dotapoint,20,20,20);
-				        Game.text("LOL POINT: "+charactor.lolpoint,Game.WIDTH-150,20,20);
+				        Game.text("DOTA pwneds: "+charactor.dotapoint,20,20,20);
+				        Game.text("LOL deaths: "+charactor.lolpoint,Game.WIDTH-150,20,20);
 				    },true);
 				    var pudgesound={
 				    	fb:Game.resource.audios["fb_dota"],
@@ -289,10 +290,11 @@
 				    	_down(e);
 				    }
 				    director.taskOnce("setup", function(){
+				    	Game.mess=0;
 				        Game.speed = 3 * Game.SCALE;
 				        Game.highscore = localscore.getScore().score;
 				        Game.startTime=Game.time;
-				        Game.countdown=3000;
+				        Game.countdown=30000;
 				        Game.score = 0;
 				        Game.font='kirbyss';
 				        Game.gameover=false;
@@ -379,10 +381,10 @@
 				    });
 				    
 				    var scoreBoard={
-				    	topMessage:["You are so stupid"],
-				    	tip:["Shut up and play your game"],
+				    	topMessage:["NOOB CYKA","STUPID","You can't DENY my victory","This is BALANCE"],
+				    	tip:["Shut up and play your game","Shut up and play your game","DOTA no 1","LOL is BEST"],
 				    	images:[]
-				    }
+				    };
 				    director.taskOnce("calscore", function(){
 				        Game.score = charactor.type=="lol"? charactor.dotapoint-charactor.lolpoint : charactor.lolpoint-charactor.dotapoint;				        
 				        
@@ -393,9 +395,11 @@
 				        } else {
 				        	Game._newtext="";
 				        }
-				        if(Game.score < 0){
+				        if(Game.score <= 0){
+				        	Game.mess=charactor.type=="lol" ? 0 : 1;
 				        	charactor.audios.lose.forceplay();
 				        } else {
+				        	Game.mess=charactor.type=="dota" ? 2 : 3;
 				        	charactor.audios.win.forceplay();
 				        }
 				        // _fb.showLeaderboard();
@@ -405,14 +409,14 @@
 				    });
 				   	director.task("scoreBoard", function(){
 				   		Game.fill(33,33,33,1);
-				   		Game.text(scoreBoard.topMessage[0],Game.WIDTH/2,100,50,1);
-				   		Game.text(scoreBoard.tip[0],Game.WIDTH/2,170,30,1);
+				   		Game.text(scoreBoard.topMessage[Game.mess],Game.WIDTH/2,100,50,1);
+				   		Game.text(scoreBoard.tip[Game.mess],Game.WIDTH/2,170,30,1);
 				        Game.fill(50,50,50,1);
 				        Game.rectMode("CENTER");
 				        Game.rect(Game.WIDTH/2,Game.HEIGHT/2,400,200);
 				        Game.fill(222,222,222,1);
-				        Game.text("DOTA POINT: "+charactor.dotapoint,Game.WIDTH/2-170,Game.HEIGHT/2-80,26);
-				        Game.text("LOL POINT: "+charactor.lolpoint,Game.WIDTH/2-170,Game.HEIGHT/2-35,26);
+				        Game.text("DOTA pwneds: "+charactor.dotapoint,Game.WIDTH/2-170,Game.HEIGHT/2-80,26);
+				        Game.text("LOL deaths: "+charactor.lolpoint,Game.WIDTH/2-170,Game.HEIGHT/2-35,26);
 				        Game.line(Game.WIDTH/2-170,Game.HEIGHT/2,Game.WIDTH/2+26,Game.HEIGHT/2);
 				        Game.text("SCORE: "+Game.score,Game.WIDTH/2-170,Game.HEIGHT/2+20,26);
 				        

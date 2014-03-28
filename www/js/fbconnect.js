@@ -194,7 +194,7 @@ window.Base64Binary = {
             this.closeButton.style.width="50px";
             this.closeButton.style.height="50px";
             this.closeButton.style.top='0px';
-            this.closeButton.style.left=(Game.WIDTH-50)+'px';
+            this.closeButton.style.left=(width-70)+'px';
             this.closeButton.style.textAlign="center";
             this.closeButton.style.lineHeight="50px";
             this.closeButton.style.fontWeight="bold";
@@ -247,6 +247,9 @@ window.Base64Binary = {
                     { scope: "publish_actions" }
                 );
                 }
+                FB.api('/me', function(response) {
+                   self.id=response.id; 
+                });
             });
             
             
@@ -380,7 +383,7 @@ window.Base64Binary = {
                                 var score = toBKGMScore(response.data[i]);
                                 score.position = i;
                                 score.imageURL = "https://graph.facebook.com/" + score.userID + "/picture";
-
+                                score.me=score.userID==self.id ? score.userID : null;
                                 // score.me = score.userID === me.fb._currentSession.authResponse.userID;
                                 scores.push(score);
 

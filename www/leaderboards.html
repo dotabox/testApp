@@ -6,76 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 
     <link rel="stylesheet" type="text/css" media="screen" href="assets/css/main.css"/>
+    <script src="//connect.facebook.net/en_US/all.js"></script>
 </head>
 
 <body>
-
+<div id="fb-root"></div>
 <div id="container" class="page_leaderboards">
 
     <div id="title">LEADERBOARD</div>
-
+    <div class="fb-like" data-href="https://www.facebook.com/BKGameMaker" data-layout="button_count" data-action="like" data-show-faces="true" data-share="true"></div>
     <div id="data">
         <table id="leaderboard">
             <tr>
                 <td class="position"> 1 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Nguyễn Tuấn Anh  </td> 
-                <td class="score">  9069  </td>
-            </tr>
-            <tr class="active">
-                <td class="position"> 2 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Đinh Hoàng Anh  </td> 
-                <td class="score">  6969  </td>
-            </tr>
-            <tr>
-                <td class="position"> 3 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Nguyễn Văn Trung  </td> 
-                <td class="score">  6960  </td>
-            </tr>
-            <tr>
-                <td class="position"> 4 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Phạm Trung Thành  </td> 
-                <td class="score">  6069  </td>
-            </tr>
-            <tr>
-                <td class="position"> 5 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Nguyễn Đức Tuấn  </td> 
-                <td class="score">  1069  </td>
-            </tr>
-            <tr>
-                <td class="position"> 6 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Cao Tuấn Anh  </td> 
-                <td class="score">  1060  </td>
-            </tr>
-            <tr>
-                <td class="position"> 7 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Nguyễn Thanh Tùng  </td> 
-                <td class="score">  969  </td>
-            </tr>
-            <tr>
-                <td class="position"> 8 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Nguyễn Hoàng Tú  </td> 
-                <td class="score">  960  </td>
-            </tr>
-            <tr>
-                <td class="position"> 9 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Nguyễn Quang Vũ  </td> 
-                <td class="score">  696  </td>
-            </tr>
-            <tr>
-                <td class="position"> 10 </td>
-                <td class="avatar"><img src="https://graph.facebook.com/1375217591/picture"></td>
-                <td class="name">  Lê Việt Hà  </td> 
-                <td class="score">  669  </td>
-            </tr>
+                <td class="avatar"><img src="https://graph.facebook.com/116364148551574/picture"></td>
+                <td class="name">  BK Game Maker  </td> 
+                <td class="score">  1  </td>
+            </tr>            
         </table>
     </div>
 </div>
@@ -90,8 +37,6 @@
 
     function addScores(scores) {
         var leaderboards = document.getElementById("leaderboard");
-        // var loadingDiv = document.getElementById("loadingDiv");
-        // loadingDiv.style.display = "none";
 
         for (var i = 0; i< scores.length; ++i) {
             var score = scores[i];
@@ -101,9 +46,10 @@
             }
 
             var str = '<td class="position">' + (score.position+1) + '</td>' +
-                    '<td class="avatar"><img src="' + score.imageURL + '"/></td>'+
+                    '<td class="avatar"><img src="' + score.imageURL + '"></td>'+
                     '<td class="name">' + score.userName + '</td>' +
                     '<td class="score">' + score.score + '</td>'
+
             newTR.innerHTML = str;
             leaderboards.appendChild(newTR); 
         }
