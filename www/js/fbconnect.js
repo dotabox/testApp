@@ -255,7 +255,7 @@ window.Base64Binary = {
 
         },
         submitScore:function(score,params,callback){
-            this.requestScore(params,function(currentScore, error) {
+            this.getScore(params,function(currentScore, error) {
                 if (error) {                    
                     if (callback)
                         callback(error);
