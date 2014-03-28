@@ -7,7 +7,6 @@ var checkCanPlay = function (src,cb) {
 	audio.setAttribute("preload", "auto");
 	audio.setAttribute("audiobuffer", true);
 	audio.addEventListener("canplaythrough", function() {
-		console.log("asdsd")
 		cb(mime);
 	}, false);
 	audio.src = "data:" + src;
@@ -50,47 +49,54 @@ BKGM.audioDetect = function(callback) {
 };
 
 })();
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+var context = new AudioContext();
 (function(){
-	window.AudioContext = window.AudioContext || window.webkitAudioContext;
-BKGM.Sound =function(source, level) {
-	if (!window.audioContext) {
-		audioContext = new AudioContext();
-	}
-	var self = this;
-	self.source = source;
-	// self.buffer = null;
-	self.isLoaded = false;
-	self.panner = audioContext.createPanner();
-	if(audioContext.createGain){
-		self.volume = audioContext.createGain();
-	} else{
-		self.volume = audioContext.createGainNode();
-	}
-	if (!level) {
-		self.volume.gain.value = 1;
-	}
-	else {
-		self.volume.gain.value = level;
-	}
+	
 
-	var getSound = Base64Binary.decodeArrayBuffer(self.source);
-	audioContext.decodeAudioData(getSound, function(buffer) {
-			self.isLoaded = true;
-			self._isEnd=false;
-			self.buffer=buffer;
-			var sound = audioContext.createBufferSource();
-			sound.buffer = buffer;
-			sound.connect(self.panner);
-			sound.playbackRate.value = 1;
-			self.panner.connect(self.volume);
-			self.volume.connect(audioContext.destination);
-			self.sound=sound;
-			self.onloaded();
-			sound.onended=function(){
-				if(self.ended) self.ended();
-			};
+// function playSound(buffer) {
+//   var source = context.createBufferSource(); // creates a sound source
+//   source.buffer = buffer;                    // tell the source which sound to play
+//   source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+//   source.start(0);                           // play the source now
+//                                              // note: on older systems, may have to use deprecated noteOn(time);
+// }
+BKGM.Sound =function(source,mime) {
+	var self = this;
+	if(window.AudioContext){
+		if (!window.context) {
+			context = new AudioContext();
 		}
-	);
+		
+		self.source = source;
+		self.isLoaded = false;
+
+		var getSound = Base64Binary.decodeArrayBuffer(self.source);
+
+		
+		context.decodeAudioData(getSound, function(buffer) {
+				self.isLoaded = true;
+				self.buffer=buffer;				
+				self.onloaded();				
+			}
+		);
+	} else {
+		var audio = new Audio();
+		audio.setAttribute("preload", "auto");
+		audio.setAttribute("audiobuffer", true);
+		if(mime=="audio/ogg")
+			audio.src="data:audio/ogg;base64,"+source;
+		else 
+			audio.src="data:audio/mp3;base64,"+source;
+		audio.addEventListener('ended', function() { 
+                if(self.ended) self.ended();
+            }, false);
+        audio.addEventListener('canplaythrough', function() { 
+           self.onloaded();
+        }, false);
+        self.audio=audio;
+	}
+	
 	// console.log(getSound)
 }
 
@@ -98,40 +104,34 @@ BKGM.Sound.prototype={
 	play : function () {
 		// Nếu sound đã load
 		if (this.isLoaded === true) {
-			
-			this.sound.noteOn(0);
+			if(webkitAudioContext){
+				this.sound.noteOn(0);
+			} else {
+				this.audio.play();
+			}
 		}
+		
 
 	},
 	forceplay : function(){
 		var self=this;
-		var sound = audioContext.createBufferSource();
-		sound.buffer = this.buffer;
-		sound.connect(this.panner);
-		sound.playbackRate.value = 1;
-		this.panner.connect(this.volume);
-		this.volume.connect(audioContext.destination);
-		self.sound=sound;
-		if (sound.start){
-			sound.start();
-		} else{
-			sound.noteOn(0);
-		}		
-					
-		sound.onended=function(){
-			if(self.ended) self.ended();
-		};	
+		if(window.AudioContext){			
+			 var src = context.createBufferSource();
+			  src.buffer = self.buffer;                                      // play back the decoded buffer
+			  // src.loop = true;                                                 // set the sound to loop while the mouse is down
+			  var gain = context.createGain();                                     // create a gain node in order to create the fade-out effect when the mouse is released
+			  src.connect(gain);
+			  gain.connect(context.destination);
+			  src.start(0);  			
+			src.onended=function(){
+				if(self.ended) self.ended();
+			};	
+		} else {
+			this.audio.currentTime=0;
+			this.audio.play();
+		}
 		
 		
-	},
-	setVolume : function (level) {
-		this.volume.gain.value = level;
-	},
-	setPan : function (xValue, yValue, zValue) {
-		this.panner.setPosition(xValue,yValue,zValue);
-	},
-	noteOff : function (context) {
-		context.noteOff(0);
 	},
 	onloaded : function(){
 

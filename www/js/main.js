@@ -13,7 +13,7 @@
 
             }
             function onDeviceReady() { 
-
+				
             	((typeof(cordova) == 'undefined') && (typeof(phonegap) == 'undefined')) ? BKGM._isCordova=false : BKGM._isCordova=true;
             	var isload=false;
             	BKGM.audioDetect(function(mime){

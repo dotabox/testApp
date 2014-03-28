@@ -908,14 +908,14 @@ var BKGM = BKGM||{};
             if (type==="soundBase64"){
                 var mime=self.mime;
                 if(mime==="audio/ogg"){
-                    var sound = new BKGM.Sound(soundData[url+".ogg"]);
+                    var sound = new BKGM.Sound(soundData[url+".ogg"],mime);
                     self.audios[name]=sound;
                     sound.onloaded=function(){
                         self._onload();
                     }
                 } else 
                 if(mime==="audio/mp3"){
-                    var sound = new BKGM.Sound(soundData[url+".mp3"]);
+                    var sound = new BKGM.Sound(soundData[url+".mp3"],mime);
                     self.audios[name]=sound;
                     sound.onloaded=function(){
                         self._onload();
