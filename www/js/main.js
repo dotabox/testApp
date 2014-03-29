@@ -34,7 +34,7 @@
 						   .load("image","LOL_Renekton","img/LOL/LOL_Renekton.png")
 						   .load("image","DOTA_Jakiro","img/DOTA/DOTA_Jakiro.png")
 						   .load("image","DOTA_Tide","img/DOTA/DOTA_Tide.png")
-						   .load("image","LOL_Teemo","img/LOL/LOL_teemo.png")
+						   .load("image","LOL_Morgana","img/LOL/LOL_Morgana2.png")
 						   .load("image","DOTA_Puck","img/DOTA/DOTA_Puck2.png")
 						   .load("image","LOL_Norctune","img/LOL/LOL_Norctune2.png")
 						   .load("image","bg","img/bg.png")
@@ -351,7 +351,7 @@
 				    {image:Game.resource.images["DOTA_Jakiro"],rows:1,columns:1,type:'dota',_class:'sky'},
 				    {image:Game.resource.images["DOTA_Tide"],rows:1,columns:1,type:'dota',_class:'water'},
 				    {image:Game.resource.images["LOL_Renekton"],rows:1,columns:1,type:'lol',_class:'water'},
-				    {image:Game.resource.images["LOL_Teemo"],rows:1,columns:1,type:'lol',_class:'sky'},
+				    {image:Game.resource.images["LOL_Morgana"],rows:1,columns:1,type:'lol',_class:'sky'},
 				    {image:Game.resource.images["DOTA_Puck"],rows:1,columns:1,type:'lol',_class:'sky'},
 				    {image:Game.resource.images["LOL_Norctune"],rows:1,columns:1,type:'lol',_class:'sky'}
 				    ]
