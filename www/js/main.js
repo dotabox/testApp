@@ -35,6 +35,8 @@
 						   .load("image","DOTA_Jakiro","img/DOTA/DOTA_Jakiro.png")
 						   .load("image","DOTA_Tide","img/DOTA/DOTA_Tide.png")
 						   .load("image","LOL_Teemo","img/LOL/LOL_teemo.png")
+						   .load("image","DOTA_Puck","img/DOTA/DOTA_Puck2.png")
+						   .load("image","LOL_Norctune","img/LOL/LOL_Norctune2.png")
 						   .load("image","bg","img/bg.png")
 						   .load("image","log","img/log.png")
 						   .load("image","log_DOTA","img/log_Dota.png")
@@ -182,7 +184,7 @@
 				        // Game.drop.updateTail()
 				        Game.fill(16,16,16,1);
 				        Game.text("DOTA pwneds: "+charactor.dotapoint,20,20,20);
-				        Game.text("LOL deaths: "+charactor.lolpoint,Game.WIDTH-150,20,20);
+				        Game.text("LOL deaths: "+charactor.lolpoint,Game.WIDTH-200,20,20);
 				    },true);
 				    var pudgesound={
 				    	fb:Game.resource.audios["fb_dota"],
@@ -304,11 +306,11 @@
 				    });
 
 				    director.taskOnce("setcount",function(){
+				    	Game._count=4000;
 				    	charactor.audios.welcome.forceplay();
 				    	charactor.audios.welcome.ended=function(){
 				    		if(charactor.audios.begin) charactor.audios.begin.forceplay();
-				    	}
-				   		Game._count=4000;
+				    	}				   		
 				    })
 				    director.task("count",function(){
 				   		Game._count-=1000/60;
@@ -349,7 +351,9 @@
 				    {image:Game.resource.images["DOTA_Jakiro"],rows:1,columns:1,type:'dota',_class:'sky'},
 				    {image:Game.resource.images["DOTA_Tide"],rows:1,columns:1,type:'dota',_class:'water'},
 				    {image:Game.resource.images["LOL_Renekton"],rows:1,columns:1,type:'lol',_class:'water'},
-				    {image:Game.resource.images["LOL_Teemo"],rows:1,columns:1,type:'lol',_class:'sky'}
+				    {image:Game.resource.images["LOL_Teemo"],rows:1,columns:1,type:'lol',_class:'sky'},
+				    {image:Game.resource.images["DOTA_Puck"],rows:1,columns:1,type:'lol',_class:'sky'},
+				    {image:Game.resource.images["LOL_Norctune"],rows:1,columns:1,type:'lol',_class:'sky'}
 				    ]
 				    function initHero(){
 				    	for (var i = _heroes.length - 1; i >= 0; i--) {
