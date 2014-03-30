@@ -41,7 +41,6 @@
     <!-- Plugins -->
 
     <!-- Core plugins -->   
-    <gap:plugin name="org.apache.cordova.device" />
     <gap:plugin name="org.apache.cordova.media" />
 
     <!-- Third party plugins -->
@@ -51,8 +50,8 @@
     -->
    
     <gap:plugin name="com.phonegap.plugins.facebookconnect">
-	    <param name="APP_ID" value="296632137153437" />
-	    <param name="APP_NAME" value="White Drop" />
+	    <param name="APP_ID" value="1405511006381605" />
+	    <param name="APP_NAME" value="DOTA vs LOL" />
 	</gap:plugin>
     <!-- Define app icon for each platform. -->
   
