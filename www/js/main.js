@@ -93,7 +93,7 @@
 			        Game.GameScore=new BKGM.ScoreLocal("dotavslol");
 			       	_fb = new BKGM.FBConnect();
 			       	_fb.init({appId:"1405511006381605"});
-			       	_fb.login();
+			       	// _fb.login();
 			       	// Game.touchStart=function(e){
 			       	// 		// _fb.postCanvas("Test post diem");
 			       	// 		// mb.setTarget(e.x,e.y);
