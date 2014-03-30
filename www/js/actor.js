@@ -261,11 +261,19 @@
             this.image=obj.image||this.image;            
             this.rows=obj.rows||this.rows;
             this.columns=obj.columns||this.columns;
-            this.maxIndex=this.columns*this.rows-2;
+            this.numberCache=this.columns*this.rows;
+            this.maxIndex=this.numberCache-2;
             this.width=this.image.width/this.columns;
             this.height=this.image.height/this.rows;
             this.posX=0;
             this.posY=0;
+            this.caches=[];
+            for (var i = 0; i < this.numberCache; i++) {
+            	var canvas=document.createElement('canvas');
+            	var ctx=canvas.getContext('2d');
+            	ctx.drawImage(this.image,(i%this.columns)*this.width,(i/this.rows>>0)*this.height,this.width,this.height,0,0,this.width,this.height);
+            	this.caches.push(canvas);
+            };
         }
     }
     BKGM.Sprite.prototype= {
@@ -303,10 +311,10 @@
                 if(this.animationIndex<this.maxIndex){
                      this.lastTime = now;
                     
-                    var index=this.currentAnimation.arr[this.animationIndex];
-                    this.switchAnimationIndex(index);
-                    this.posX=this.width*this.state.x;
-                    this.posY=this.height*this.state.y;
+                    // var index=this.currentAnimation.arr[this.animationIndex];
+                    // this.switchAnimationIndex(index);
+                    // this.posX=this.width*this.state.x;
+                    // this.posY=this.height*this.state.y;
                     this.animationIndex++;
                 } else if (this.animationIndex==this.maxIndex){
                     if (this.endfn) 
@@ -322,7 +330,8 @@
 					Game.ctx.scale(1, -1);
 				}
 			rotation ? Game.ctx.rotate(rotation):null;
-            Game.ctx.drawImage(this.image,this.posX,this.posY,this.width,this.height,-this.width/2,-this.height/2,this.width,this.height)
+            // Game.ctx.drawImage(this.image,this.posX,this.posY,this.width,this.height,-this.width/2,-this.height/2,this.width,this.height)
+            Game.ctx.drawImage(this.caches[this.animationIndex],-this.width/2,-this.height/2)
             Game.ctx.restore();
         }
     };
